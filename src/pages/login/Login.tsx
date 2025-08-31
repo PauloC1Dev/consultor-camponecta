@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 
 export const Login = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -9,6 +12,8 @@ export const Login = () => {
 
   const handleSubmit = () => {
     console.log('Login attempt:', { email, password, rememberMe });
+
+    navigate('/procurar')
   };
 
   return (
