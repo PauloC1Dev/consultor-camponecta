@@ -17,14 +17,7 @@ export const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative">
-      {/* Animated background particles */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
-        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-blue-400 rounded-full animate-ping animation-delay-1000"></div>
-        <div className="absolute bottom-1/4 left-3/4 w-1.5 h-1.5 bg-pink-400 rounded-full animate-ping animation-delay-2000"></div>
-      </div>
-
+    <div>
       <div className="relative z-10 w-full max-w-md">
         {/* Main card */}
         <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 space-y-8">
@@ -34,8 +27,8 @@ export const Login = () => {
               <User className="w-10 h-10 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Bem-vindo</h1>
-              <p className="text-gray-300 text-sm">
+              <h1 className="bg-">Bem-vindo</h1>
+              <p className="text-red-300 text-sm">
                 Entre na sua conta para continuar
               </p>
             </div>
