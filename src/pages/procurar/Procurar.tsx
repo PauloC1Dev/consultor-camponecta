@@ -1,6 +1,6 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../db/supabaseClient'
-import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 export const Procurar = () => {
@@ -10,14 +10,12 @@ export const Procurar = () => {
   const [inputValue, setInputValue] = useState('')
 
   const { data: ofertas, error } = useQuery({
-    // Inclui ofertaNome na queryKey para revalidar quando o parâmetro mudar
     queryKey: ['ofertas', ofertaNome],
     queryFn: async () => {
       let query = supabase
         .from('ofertas')
         .select('id, nome, tipo, quantidade, valor')
 
-      // Adiciona o filtro LIKE se ofertaNome existir
       if (ofertaNome) {
         query = query.ilike('nome', `%${ofertaNome}%`)
       }
@@ -43,8 +41,45 @@ export const Procurar = () => {
   }
 
   const handleClean = () => {
-    setInputValue('') // Limpa o input
-    setSearchParams({}) // Remove todos os parâmetros da URL
+    setInputValue('')
+    setSearchParams({})
+  }
+
+  const handleCopyOferta = (oferta: any) => {
+    const texto = `🛒 *${oferta.nome}*\n📦 Tipo: ${oferta.tipo}\n🔢 Quantidade: ${oferta.quantidade}\n💰 Valor: R$ ${oferta.valor}`
+
+    navigator.clipboard
+      .writeText(texto)
+      .then(() => {
+        alert('Oferta copiada para o clipboard! 📋')
+      })
+      .catch(() => {
+        alert('Erro ao copiar. Tente novamente.')
+      })
+  }
+
+  const handleCopyAllOferta = () => {
+    if (!ofertas || ofertas.length === 0) {
+      alert('Nenhuma oferta para copiar!')
+      return
+    }
+
+    const textoCompleto = ofertas
+      .map((oferta, index) => {
+        return `${index + 1}. 🛒 *${oferta.nome}*\n   📦 Tipo: ${oferta.tipo}\n   🔢 Quantidade: ${oferta.quantidade}\n   💰 Valor: R$ ${oferta.valor}`
+      })
+      .join('\n\n')
+
+    const textoFinal = `📋 *LISTA DE OFERTAS*\n\n${textoCompleto}\n\n✨ Total de ofertas: ${ofertas.length}`
+
+    navigator.clipboard
+      .writeText(textoFinal)
+      .then(() => {
+        alert(`${ofertas.length} ofertas copiadas para o clipboard! 📋`)
+      })
+      .catch(() => {
+        alert('Erro ao copiar. Tente novamente.')
+      })
   }
 
   return (
@@ -68,13 +103,48 @@ export const Procurar = () => {
 
       {/* Lista das ofertas */}
       <div>
+        {/* Botão para copiar todas as ofertas */}
+        {ofertas && ofertas.length > 0 && (
+          <div style={{ marginBottom: '20px' }}>
+            <button
+              onClick={handleCopyAllOferta}
+              style={{
+                backgroundColor: '#128C7E',
+                color: 'white',
+                border: 'none',
+                padding: '12px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              }}
+            >
+              📱 Copiar Todas as Ofertas
+            </button>
+          </div>
+        )}
         {ofertas && ofertas.length > 0 ? (
           ofertas.map((oferta) => (
-            <div key={oferta.id}>
-              <h3>{oferta.nome}</h3>
-              <p>Tipo: {oferta.tipo}</p>
-              <p>Quantidade: {oferta.quantidade}</p>
-              <p>Valor: R$ {oferta.valor}</p>
+            <div>
+              <div key={oferta.id}>
+                <h3>{oferta.nome}</h3>
+                <p>Tipo: {oferta.tipo}</p>
+                <p>Quantidade: {oferta.quantidade}</p>
+                <p>Valor: R$ {oferta.valor}</p>
+              </div>
+              <button
+                onClick={() => handleCopyOferta(oferta)}
+                style={{
+                  backgroundColor: '#25D366',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 12px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                }}
+              >
+                📱 Copiar para WhatsApp
+              </button>
             </div>
           ))
         ) : (
