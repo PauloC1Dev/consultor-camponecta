@@ -1,21 +1,28 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../db/supabaseClient'
-import { Autocomplete, Box, Input, TextField } from '@mui/material'
-import GenericSelect from '../../components/SelectInput'
-import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 export const Procurar = () => {
-  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [selectedOfer, setSelectedOfer] = useState(null)
+  const ofertaNome = searchParams.get('ofertaNome')
+
+  const [inputValue, setInputValue] = useState('')
 
   const { data: ofertas, error } = useQuery({
-    queryKey: ['ofertas'],
+    // Inclui ofertaNome na queryKey para revalidar quando o parâmetro mudar
+    queryKey: ['ofertas', ofertaNome],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('ofertas')
         .select('id, nome, tipo, quantidade, valor')
+
+      // Adiciona o filtro LIKE se ofertaNome existir
+      if (ofertaNome) {
+        query = query.ilike('nome', `%${ofertaNome}%`)
+      }
+
+      const { data, error } = await query
 
       if (error) {
         throw new Error(error.message)
@@ -29,27 +36,51 @@ export const Procurar = () => {
     throw new Error(error.message)
   }
 
-  useEffect(() => {
-    if (selectedOfer) {
-      const params = new URLSearchParams(searchParams)
-      params.set('ofertaNome', selectedOfer)
-      navigate(`?${params.toString()}`, { replace: true })
+  const handleClick = () => {
+    if (inputValue.trim()) {
+      setSearchParams({ ofertaNome: inputValue })
     }
-  }, [selectedOfer, navigate, searchParams])
+  }
+
+  const handleClean = () => {
+    setInputValue('') // Limpa o input
+    setSearchParams({}) // Remove todos os parâmetros da URL
+  }
 
   return (
     <>
-      <Autocomplete
-        value={selectedOfer?.nome || null}
-        onChange={(event, newValue) => {
-          setSelectedOfer(newValue.nome)
+      <input
+        type="text"
+        placeholder="Maçã..."
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            if (inputValue.length <= 0) return handleClean()
+            handleClick()
+          }
         }}
-        options={ofertas}
-        getOptionLabel={(option) => option.nome}
-        isOptionEqualToValue={(option, value) => option.id === value?.id}
-        renderInput={(params) => <TextField {...params} label="Teste Nativo" />}
       />
-      <div>Procurar</div>
+
+      <button onClick={handleClick}>Procurar</button>
+
+      <button onClick={handleClean}>Limpar</button>
+
+      {/* Lista das ofertas */}
+      <div>
+        {ofertas && ofertas.length > 0 ? (
+          ofertas.map((oferta) => (
+            <div key={oferta.id}>
+              <h3>{oferta.nome}</h3>
+              <p>Tipo: {oferta.tipo}</p>
+              <p>Quantidade: {oferta.quantidade}</p>
+              <p>Valor: R$ {oferta.valor}</p>
+            </div>
+          ))
+        ) : (
+          <p>Nenhuma oferta encontrada</p>
+        )}
+      </div>
     </>
   )
 }
