@@ -8,12 +8,35 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(false)
 
-  const handleSubmit = () => {
-    console.log('Login attempt:', { email, password, rememberMe })
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-    navigate('/procurar')
+      const data = await response.json()
+
+      if (data.success) {
+        const expirationTime = Date.now() + 30 * 60 * 1000
+        localStorage.setItem(
+          'authCampoData',
+          JSON.stringify({
+            isCampoAuthenticated: true,
+            expiration: expirationTime,
+          })
+        )
+        navigate('/procurar')
+      } else {
+        alert(data.message)
+      }
+    } catch (error) {
+      alert('Dados incorretos.')
+    }
   }
 
   return (
@@ -87,7 +110,7 @@ export const Login = () => {
 
             {/* Login button */}
             <button
-              onClick={handleSubmit}
+              onClick={handleLogin}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Entrar
