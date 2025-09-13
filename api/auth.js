@@ -2,6 +2,8 @@ export default function authHandler(request, response) {
   const ADMIN_EMAIL = process.env.VITE_ADMINISTRADOR
   const ADMIN_PASSWORD = process.env.VITE_CHAVE_DE_ACESSO
 
+  console.log('cheguei aqui')
+
   if (request.method === 'POST') {
     const { email, password } = request.body
 
