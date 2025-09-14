@@ -101,28 +101,27 @@ export const Procurar = () => {
 
       <button onClick={handleClean}>Limpar</button>
 
-      {/* Lista das ofertas */}
       <div>
-        {/* Botão para copiar todas as ofertas */}
         {ofertas && ofertas.length > 0 && (
           <div style={{ marginBottom: '20px' }}>
             <button
-              onClick={handleCopyAllOferta}
               style={{
-                backgroundColor: '#128C7E',
                 color: 'white',
                 border: 'none',
-                padding: '12px 20px',
-                borderRadius: '5px',
-                cursor: 'pointer',
                 fontSize: '16px',
+                cursor: 'pointer',
                 fontWeight: 'bold',
+                borderRadius: '5px',
+                padding: '12px 20px',
+                backgroundColor: '#128C7E',
               }}
+              onClick={handleCopyAllOferta}
             >
               📱 Copiar Todas as Ofertas
             </button>
           </div>
         )}
+
         {ofertas && ofertas.length > 0 ? (
           ofertas.map((oferta) => (
             <div>
@@ -135,12 +134,12 @@ export const Procurar = () => {
               <button
                 onClick={() => handleCopyOferta(oferta)}
                 style={{
-                  backgroundColor: '#25D366',
                   color: 'white',
                   border: 'none',
-                  padding: '8px 12px',
-                  borderRadius: '5px',
                   cursor: 'pointer',
+                  borderRadius: '5px',
+                  padding: '8px 12px',
+                  backgroundColor: '#25D366',
                 }}
               >
                 📱 Copiar para WhatsApp
