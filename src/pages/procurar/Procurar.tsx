@@ -10,7 +10,7 @@ export const Procurar = () => {
 
   const [inputValue, setInputValue] = useState('')
 
-  const { data: ofertas, error } = useQuery({
+  const { data: ofertas, error } = useQuery<any[]>({
     queryKey: ['ofertas', ofertaNome],
     queryFn: async () => {
       let query = supabase.from('ofertas').select(`
@@ -79,7 +79,25 @@ export const Procurar = () => {
 
     const textoCompleto = ofertas
       .map((oferta, index) => {
-        return `${index + 1}. 🛒 *${oferta.nome}*\n   📦 Tipo: ${oferta.tipo}\n   🔢 Quantidade: ${oferta.quantidade} Kg\n   💰 Valor: R$ ${oferta.valor}`
+        const dataValidade = oferta.data_validade_fim
+          ? new Date(oferta.data_validade_fim).toLocaleDateString('pt-BR')
+          : 'Sem data'
+
+        const fornecedor = oferta.usuarios
+          ? oferta.usuarios.nome
+          : 'Não informado'
+        const telefone = oferta.usuarios
+          ? oferta.usuarios.telefone
+          : 'Não informado'
+
+        return `${index + 1}. 🛒 *${oferta.nome}*
+   📦 Tipo: ${oferta.tipo}
+   🔢 Quantidade: ${oferta.quantidade} ${oferta.unidade_medida}
+   💰 Valor: R$ ${oferta.valor}
+   📅 Validade até: ${dataValidade}
+   📍 Local: ${oferta.estado}/${oferta.cidade}
+   👤 Fornecedor: ${fornecedor}
+   📞 Telefone: ${telefone}`
       })
       .join('\n\n')
 
@@ -171,11 +189,10 @@ export const Procurar = () => {
               </p>
               <Divider className="my-2 text-gray-300" />
               <p className="text-gray-600 mt-1">
-                <b>Fornecedor:</b> {oferta.usuarios && oferta.usuarios[0]?.nome}
+                <b>Fornecedor:</b> {oferta.usuarios && oferta.usuarios.nome}
               </p>
               <p className="text-gray-600">
-                <b>Telefone:</b>{' '}
-                {oferta.usuarios && oferta.usuarios[0]?.telefone}
+                <b>Telefone:</b> {oferta.usuarios && oferta.usuarios.telefone}
               </p>
 
               <button
