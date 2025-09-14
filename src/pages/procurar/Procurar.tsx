@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../db/supabaseClient'
 import { useSearchParams } from 'react-router-dom'
+import { Divide } from 'lucide-react'
+import { Divider } from '@mui/material'
 
 export const Procurar = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -12,9 +14,21 @@ export const Procurar = () => {
   const { data: ofertas, error } = useQuery({
     queryKey: ['ofertas', ofertaNome],
     queryFn: async () => {
-      let query = supabase
-        .from('ofertas')
-        .select('id, nome, tipo, quantidade, valor')
+      let query = supabase.from('ofertas').select(`
+        id,
+        nome,
+        tipo,
+        quantidade,
+        unidade_medida,
+        valor,
+        data_validade_fim,
+        estado,
+        cidade,
+        usuarios (
+          nome,
+          telefone
+        )
+      `)
 
       if (ofertaNome) {
         query = query.ilike('nome', `%${ofertaNome}%`)
@@ -66,7 +80,7 @@ export const Procurar = () => {
 
     const textoCompleto = ofertas
       .map((oferta, index) => {
-        return `${index + 1}. 🛒 *${oferta.nome}*\n   📦 Tipo: ${oferta.tipo}\n   🔢 Quantidade: ${oferta.quantidade}\n   💰 Valor: R$ ${oferta.valor}`
+        return `${index + 1}. 🛒 *${oferta.nome}*\n   📦 Tipo: ${oferta.tipo}\n   🔢 Quantidade: ${oferta.quantidade} Kg\n   💰 Valor: R$ ${oferta.valor}`
       })
       .join('\n\n')
 
@@ -83,73 +97,99 @@ export const Procurar = () => {
   }
 
   return (
-    <>
-      <input
-        type="text"
-        placeholder="Maçã..."
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            if (inputValue.length <= 0) return handleClean()
-            handleClick()
-          }
-        }}
-      />
+    <div className="flex flex-col items-center px-4 py-8">
+      {/* Campo de busca */}
+      <div className="w-full max-w-md flex flex-col sm:flex-row gap-2 mb-6">
+        <input
+          type="text"
+          placeholder="Nome do produto"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              if (inputValue.length <= 0) return handleClean()
+              handleClick()
+            }
+          }}
+          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        />
 
-      <button onClick={handleClick}>Procurar</button>
+        <div className="flex gap-2 sm:flex-row">
+          <button
+            onClick={handleClick}
+            className="rounded-lg bg-emerald-600 text-white px-4 py-2 font-medium hover:bg-emerald-700 transition w-full sm:w-auto"
+          >
+            Procurar
+          </button>
+          <button
+            onClick={handleClean}
+            className="rounded-lg bg-gray-400 text-white px-4 py-2 font-medium hover:bg-gray-500 transition w-full sm:w-auto"
+          >
+            Limpar
+          </button>
+        </div>
+      </div>
 
-      <button onClick={handleClean}>Limpar</button>
+      {ofertas && ofertas.length > 0 && (
+        <div className="w-full max-w-md mb-6">
+          <button
+            onClick={handleCopyAllOferta}
+            className="w-full rounded-lg bg-emerald-700 text-white px-4 py-3 font-semibold shadow hover:bg-emerald-800 transition"
+          >
+            📱 Copiar Todas as Ofertas
+          </button>
+        </div>
+      )}
 
-      <div>
-        {ofertas && ofertas.length > 0 && (
-          <div style={{ marginBottom: '20px' }}>
-            <button
-              style={{
-                color: 'white',
-                border: 'none',
-                fontSize: '16px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                borderRadius: '5px',
-                padding: '12px 20px',
-                backgroundColor: '#128C7E',
-              }}
-              onClick={handleCopyAllOferta}
-            >
-              📱 Copiar Todas as Ofertas
-            </button>
-          </div>
-        )}
-
+      <div className="w-full max-w-md flex flex-col gap-4">
         {ofertas && ofertas.length > 0 ? (
           ofertas.map((oferta) => (
-            <div>
-              <div key={oferta.id}>
-                <h3>{oferta.nome}</h3>
-                <p>Tipo: {oferta.tipo}</p>
-                <p>Quantidade: {oferta.quantidade}</p>
-                <p>Valor: R$ {oferta.valor}</p>
-              </div>
+            <div
+              key={oferta.id}
+              className="rounded-xl border border-gray-200 bg-white shadow-md p-4"
+            >
+              <h3 className="text-lg font-bold text-gray-800">{oferta.nome}</h3>
+              <p className="text-gray-600">
+                <b>Tipo:</b> {oferta.tipo}
+              </p>
+              <p className="text-gray-600">
+                <b>Quantidade:</b> {oferta.quantidade} {oferta.unidade_medida}
+              </p>
+              <p className="text-gray-800 font-medium">
+                <b>Valor:</b>{' '}
+                <span className="text-emerald-600">R$ {oferta.valor}</span>
+              </p>
+              <p className="text-gray-600">
+                <b>Validade até:</b>{' '}
+                {oferta.data_validade_fim
+                  ? new Date(oferta.data_validade_fim).toLocaleDateString(
+                      'pt-BR'
+                    )
+                  : 'Sem data'}
+              </p>
+              <p className="text-gray-600 mb-1">
+                <b>Local:</b> {oferta.estado}/{oferta.cidade}
+              </p>
+              <Divider className="my-2 text-gray-300" />
+              <p className="text-gray-600 mt-1">
+                <b>Fornecedor:</b> {oferta.usuarios?.nome}
+              </p>
+              <p className="text-gray-600">
+                <b>Telefone:</b> {oferta.usuarios?.telefone}
+              </p>
+
               <button
                 onClick={() => handleCopyOferta(oferta)}
-                style={{
-                  color: 'white',
-                  border: 'none',
-                  cursor: 'pointer',
-                  borderRadius: '5px',
-                  padding: '8px 12px',
-                  backgroundColor: '#25D366',
-                }}
+                className="mt-4 w-full rounded-lg bg-emerald-500 text-white px-4 py-2 font-medium hover:bg-emerald-600 transition"
               >
                 📱 Copiar para WhatsApp
               </button>
             </div>
           ))
         ) : (
-          <p>Nenhuma oferta encontrada</p>
+          <p className="text-gray-500 text-center">Nenhuma oferta encontrada</p>
         )}
       </div>
-    </>
+    </div>
   )
 }
