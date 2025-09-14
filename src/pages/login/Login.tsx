@@ -1,16 +1,19 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import Swal from 'sweetalert2'
 
 export const Login = () => {
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true)
       const response = await fetch('/api/auth', {
         method: 'POST',
         headers: {
@@ -34,10 +37,24 @@ export const Login = () => {
         )
         navigate('/procurar')
       } else {
-        alert(data.message)
+        Swal.fire({
+          timer: 4000,
+          icon: 'error',
+          showCancelButton: false,
+          title: 'Falha de acesso!',
+          text: `${data.message}`,
+        })
       }
     } catch (error) {
-      alert('Dados incorretos.')
+      Swal.fire({
+        timer: 4000,
+        icon: 'error',
+        showCancelButton: false,
+        title: 'Falha de acesso!',
+        text: `Dados inválidos, tente novamente.`,
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -59,7 +76,7 @@ export const Login = () => {
             </label>
             <div className="relative">
               <input
-                type="text"
+                type="email"
                 placeholder="Digite seu usuário"
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none pl-10"
                 onChange={(e) => setEmail(e.target.value)}
@@ -97,9 +114,21 @@ export const Login = () => {
           <button
             type="button"
             onClick={handleLogin}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg shadow-md transition-colors"
+            disabled={isLoading}
+            className={`w-full font-semibold py-2 rounded-lg shadow-md transition-colors ${
+              isLoading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
           >
-            Entrar
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Entrando...
+              </div>
+            ) : (
+              'Entrar'
+            )}
           </button>
         </form>
       </div>
