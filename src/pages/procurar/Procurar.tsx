@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../db/supabaseClient'
 import { useSearchParams } from 'react-router-dom'
-import { Divide } from 'lucide-react'
 import { Divider } from '@mui/material'
 
 export const Procurar = () => {
@@ -172,10 +171,11 @@ export const Procurar = () => {
               </p>
               <Divider className="my-2 text-gray-300" />
               <p className="text-gray-600 mt-1">
-                <b>Fornecedor:</b> {oferta.usuarios?.nome}
+                <b>Fornecedor:</b> {oferta.usuarios && oferta.usuarios[0]?.nome}
               </p>
               <p className="text-gray-600">
-                <b>Telefone:</b> {oferta.usuarios?.telefone}
+                <b>Telefone:</b>{' '}
+                {oferta.usuarios && oferta.usuarios[0]?.telefone}
               </p>
 
               <button
