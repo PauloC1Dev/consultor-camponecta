@@ -16,8 +16,8 @@ export const Demanda = () => {
   const demandaCidade = searchParams.get('demandaCidade')
 
   const [inputNome, setInputNome] = useState('')
-  const [inputEstado, setInputEstado] = useState('')
   const [inputCidade, setInputCidade] = useState('')
+  const [inputEstado, setInputEstado] = useState('')
 
   const { data: demandas, error } = useQuery<any[]>({
     queryKey: ['demandas', demandaNome, demandaEstado, demandaCidade],
