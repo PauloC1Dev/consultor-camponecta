@@ -97,21 +97,21 @@ export const Demanda = () => {
     setSearchParams({})
   }
 
-  const handleCopyOferta = (oferta: any) => {
+  const handleCopyOferta = (demanda: any) => {
     const texto = `
-   🛒  *${oferta.nome}*
-   📦 Tipo: ${oferta.tipo}
-   🔢 Quantidade: ${oferta.quantidade} ${oferta.unidade_medida}
-   💰 Valor: R$ ${oferta.valor} por kg
+   🛒  *${demanda.nome}*
+   📦 Tipo: ${demanda.tipo}
+   🔢 Quantidade: ${demanda.quantidade} ${demanda.unidade_medida}
+   💰 Valor: R$ ${demanda.valor} por kg
    📅 Validade até: ${
-     oferta.data_validade_fim
-       ? new Date(oferta.data_validade_fim).toLocaleDateString('pt-BR')
+     demanda.data_validade_fim
+       ? new Date(demanda.data_validade_fim).toLocaleDateString('pt-BR')
        : 'Sem data'
    }
-   📍 Local: ${oferta.estado}/${oferta.cidade}
+   📍 Local: ${demanda.estado}/${demanda.cidade}
    ------------------------------------------------------
-   👤 Fornecedor: ${oferta.usuarios.nome}
-   📞 Telefone: ${formatarTelefone(oferta.usuarios.telefone)}`
+   👤 Fornecedor: ${demanda.usuarios.nome}
+   📞 Telefone: ${formatarTelefone(demanda.usuarios.telefone)}`
 
     navigator.clipboard
       .writeText(texto)
@@ -120,8 +120,8 @@ export const Demanda = () => {
           timer: 2000,
           icon: 'success',
           showCancelButton: false,
-          title: 'Demandas Copiada!',
-          text: 'Abra o whastapp e cole a oferta para compartilhar.',
+          title: 'Demanda Copiada!',
+          text: 'Abra o whastapp e cole a demanda para compartilhar.',
         })
       })
       .catch(() => {
@@ -140,7 +140,7 @@ export const Demanda = () => {
       Swal.fire({
         icon: 'warning',
         showCancelButton: false,
-        title: '📋Nenhuma oferta para copiar!',
+        title: '📋Nenhuma demanda para copiar!',
       })
       return
     }
@@ -179,8 +179,8 @@ export const Demanda = () => {
           timer: 2000,
           icon: 'success',
           showCancelButton: false,
-          title: `📋 ${demandas.length} Ofertas Copiadas!`,
-          text: 'Abra o whastapp e cole as ofertas para compartilhar.',
+          title: `📋 ${demandas.length} demandas Copiadas!`,
+          text: 'Abra o whastapp e cole as demandas para compartilhar.',
         })
       })
       .catch(() => {
@@ -203,13 +203,13 @@ export const Demanda = () => {
             className="cursor-pointer"
             onClick={() => navigate('/oferta')}
           >
-            <ArrowBigLeft size={35} className=" text-emerald-600" />
+            <ArrowBigLeft size={35} color="blue" />
           </button>
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Procurar demandas
           </h1>
           <button type="button" disabled={true}>
-            <ArrowBigRight size={35} className=" text-emerald-600" />
+            <ArrowBigRight size={35} color="blue" />
           </button>
         </div>
         <div className="flex sm:flex-row w-full justify-center">
@@ -340,7 +340,7 @@ export const Demanda = () => {
         ) : (
           <div>
             <p className="text-gray-500 text-center">
-              Nenhuma oferta encontrada
+              Nenhuma demanda encontrada
             </p>
             <img
               src="picole.gif"
