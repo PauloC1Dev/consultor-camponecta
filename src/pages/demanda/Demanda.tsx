@@ -1,27 +1,28 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../db/supabaseClient'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Divider } from '@mui/material'
 import { formatarTelefone } from '../../utils/telefoneMask'
 import Swal from 'sweetalert2'
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react'
 
-export const Procurar = () => {
+export const Demanda = () => {
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const ofertaNome = searchParams.get('ofertaNome')
-  const ofertaEstado = searchParams.get('ofertaEstado')
-  const ofertaCidade = searchParams.get('ofertaCidade')
+  const demandaNome = searchParams.get('demandaNome')
+  const demandaEstado = searchParams.get('demandaEstado')
+  const demandaCidade = searchParams.get('demandaCidade')
 
   const [inputNome, setInputNome] = useState('')
   const [inputEstado, setInputEstado] = useState('')
   const [inputCidade, setInputCidade] = useState('')
 
-  const { data: ofertas, error } = useQuery<any[]>({
-    queryKey: ['ofertas', ofertaNome, ofertaEstado, ofertaCidade],
+  const { data: demandas, error } = useQuery<any[]>({
+    queryKey: ['demandas', demandaNome, demandaEstado, demandaCidade],
     queryFn: async () => {
-      let query = supabase.from('ofertas').select(`
+      let query = supabase.from('demandas').select(`
         id,
         nome,
         tipo,
@@ -37,16 +38,16 @@ export const Procurar = () => {
         )
       `)
 
-      if (ofertaNome) {
-        query = query.ilike('nome', `%${ofertaNome}%`)
+      if (demandaNome) {
+        query = query.ilike('nome', `%${demandaNome}%`)
       }
 
-      if (ofertaEstado) {
-        query = query.ilike('estado', `%${ofertaEstado}%`)
+      if (demandaEstado) {
+        query = query.ilike('estado', `%${demandaEstado}%`)
       }
 
-      if (ofertaCidade) {
-        query = query.ilike('cidade', `%${ofertaCidade}%`)
+      if (demandaCidade) {
+        query = query.ilike('cidade', `%${demandaCidade}%`)
       }
 
       const { data, error } = await query
@@ -59,6 +60,7 @@ export const Procurar = () => {
           title: 'Falha na conexão com o banco!',
           text: 'Entre em contato com o administrador ou tente novamente.',
         })
+        console.log(error)
         throw new Error(error.message)
       }
 
@@ -74,15 +76,15 @@ export const Procurar = () => {
     const params: any = {}
 
     if (inputNome.trim()) {
-      params.ofertaNome = inputNome
+      params.demandaNome = inputNome
     }
 
     if (inputEstado.trim()) {
-      params.ofertaEstado = inputEstado
+      params.demandaEstado = inputEstado
     }
 
     if (inputCidade.trim()) {
-      params.ofertaCidade = inputCidade
+      params.demandaCidade = inputCidade
     }
 
     setSearchParams(params)
@@ -118,7 +120,7 @@ export const Procurar = () => {
           timer: 2000,
           icon: 'success',
           showCancelButton: false,
-          title: '📋Oferta Copiada!',
+          title: 'Demandas Copiada!',
           text: 'Abra o whastapp e cole a oferta para compartilhar.',
         })
       })
@@ -134,7 +136,7 @@ export const Procurar = () => {
   }
 
   const handleCopyAllOferta = () => {
-    if (!ofertas || ofertas.length === 0) {
+    if (!demandas || demandas.length === 0) {
       Swal.fire({
         icon: 'warning',
         showCancelButton: false,
@@ -143,32 +145,32 @@ export const Procurar = () => {
       return
     }
 
-    const textoCompleto = ofertas
-      .map((oferta, index) => {
-        const dataValidade = oferta.data_validade_fim
-          ? new Date(oferta.data_validade_fim).toLocaleDateString('pt-BR')
+    const textoCompleto = demandas
+      .map((demanda, index) => {
+        const dataValidade = demanda.data_validade_fim
+          ? new Date(demanda.data_validade_fim).toLocaleDateString('pt-BR')
           : 'Sem data'
 
-        const fornecedor = oferta.usuarios
-          ? oferta.usuarios.nome
+        const fornecedor = demanda.usuarios
+          ? demanda.usuarios.nome
           : 'Não informado'
-        const telefone = oferta.usuarios
-          ? oferta.usuarios.telefone
+        const telefone = demanda.usuarios
+          ? demanda.usuarios.telefone
           : 'Não informado'
 
-        return `${index + 1}. 🛒 *${oferta.nome}*
-   📦 Tipo: ${oferta.tipo}
-   🔢 Quantidade: ${oferta.quantidade} ${oferta.unidade_medida}
-   💰 Valor: R$ ${oferta.valor} por kg
+        return `${index + 1}. 🛒 *${demanda.nome}*
+   📦 Tipo: ${demanda.tipo}
+   🔢 Quantidade: ${demanda.quantidade} ${demanda.unidade_medida}
+   💰 Valor: R$ ${demanda.valor} por kg
    📅 Validade até: ${dataValidade}
-   📍 Local: ${oferta.estado}/${oferta.cidade}
+   📍 Local: ${demanda.estado}/${demanda.cidade}
    ------------------------------------------------------
    👤 Fornecedor: ${fornecedor}
    📞 Telefone: ${formatarTelefone(telefone)}`
       })
       .join('\n\n')
 
-    const textoFinal = `📋 *LISTA DE OFERTAS*\n\n${textoCompleto}\n\n✨ Total de ofertas: ${ofertas.length}`
+    const textoFinal = `📋 *LISTA DE OFERTAS*\n\n${textoCompleto}\n\n✨ Total de ofertas: ${demandas.length}`
 
     navigator.clipboard
       .writeText(textoFinal)
@@ -177,7 +179,7 @@ export const Procurar = () => {
           timer: 2000,
           icon: 'success',
           showCancelButton: false,
-          title: `📋 ${ofertas.length} Ofertas Copiadas!`,
+          title: `📋 ${demandas.length} Ofertas Copiadas!`,
           text: 'Abra o whastapp e cole as ofertas para compartilhar.',
         })
       })
@@ -193,16 +195,20 @@ export const Procurar = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-green-100 to-green-200">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-blue-100 to-blue-200">
       <div className="w-full max-w-4xl flex flex-col gap-4 mb-6">
         <div className="flex justify-center gap-15">
-          <button type="button">
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => navigate('/oferta')}
+          >
             <ArrowBigLeft size={35} className=" text-emerald-600" />
           </button>
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
-            Procurar ofertas
+            Procurar demandas
           </h1>
-          <button type="button">
+          <button type="button" disabled={true}>
             <ArrowBigRight size={35} className=" text-emerald-600" />
           </button>
         </div>
@@ -255,7 +261,7 @@ export const Procurar = () => {
         <div className="flex gap-2 justify-center">
           <button
             onClick={handleClick}
-            className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-emerald-600 text-white px-6 py-2 font-medium hover:bg-emerald-700 transition"
+            className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-blue-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition"
           >
             Procurar
           </button>
@@ -268,11 +274,11 @@ export const Procurar = () => {
         </div>
       </div>
 
-      {ofertas && ofertas.length > 0 && (
+      {demandas && demandas.length > 0 && (
         <div className="w-full max-w-md mb-6">
           <button
             onClick={handleCopyAllOferta}
-            className="w-full rounded-lg bg-emerald-700 text-white px-4 py-3 font-semibold shadow hover:bg-emerald-800 transition"
+            className="w-full rounded-lg bg-blue-800 text-white px-4 py-3 font-semibold shadow hover:bg-blue-900 transition"
           >
             📱 Copiar todas as ofertas
           </button>
@@ -280,51 +286,52 @@ export const Procurar = () => {
       )}
 
       <div className="w-full max-w-md flex flex-col gap-4">
-        {ofertas && ofertas.length > 0 ? (
-          ofertas.map((oferta) => (
+        {demandas && demandas.length > 0 ? (
+          demandas.map((demanda) => (
             <div
-              key={oferta.id}
+              key={demanda.id}
               className="rounded-xl border border-gray-200 bg-white shadow-md p-4"
             >
               <h3 className="text-lg font-bold text-gray-800">
-                {oferta.nome || 'N/A'}
+                {demanda.nome || 'N/A'}
               </h3>
               <p className="text-gray-600">
-                <b>Tipo:</b> {oferta.tipo}
+                <b>Tipo:</b> {demanda.tipo}
               </p>
               <p className="text-gray-600">
-                <b>Quantidade:</b> {oferta.quantidade || 'N/A'}{' '}
-                {oferta.unidade_medida || 'N/A'}
+                <b>Quantidade:</b> {demanda.quantidade || 'N/A'}{' '}
+                {demanda.unidade_medida || 'N/A'}
               </p>
               <p className="text-gray-800 font-medium">
                 <b>Valor:</b>{' '}
-                <span className="text-emerald-600">
-                  R$ {oferta.valor || 'N/A'}
+                <span className="text-blue-700">
+                  R$ {demanda.valor || 'N/A'}
                 </span>
               </p>
               <p className="text-gray-600">
                 <b>Validade até:</b>{' '}
-                {oferta.data_validade_fim
-                  ? new Date(oferta.data_validade_fim).toLocaleDateString(
+                {demanda.data_validade_fim
+                  ? new Date(demanda.data_validade_fim).toLocaleDateString(
                       'pt-BR'
                     )
                   : 'Sem data'}
               </p>
               <p className="text-gray-600 mb-1">
-                <b>Local:</b> {oferta.estado || 'N/A'}/{oferta.cidade || 'N/A'}
+                <b>Local:</b> {demanda.estado || 'N/A'}/
+                {demanda.cidade || 'N/A'}
               </p>
               <Divider className="my-2 text-gray-300" />
               <p className="text-gray-600 mt-1">
-                <b>Fornecedor:</b> {oferta.usuarios.nome || 'N/A'}
+                <b>Fornecedor:</b> {demanda.usuarios.nome || 'N/A'}
               </p>
               <p className="text-gray-600">
                 <b>Telefone:</b>{' '}
-                {formatarTelefone(oferta.usuarios.telefone) || 'N/A'}
+                {formatarTelefone(demanda.usuarios.telefone) || 'N/A'}
               </p>
 
               <button
-                onClick={() => handleCopyOferta(oferta)}
-                className="mt-4 w-full rounded-lg bg-emerald-500 text-white px-4 py-2 font-medium hover:bg-emerald-600 transition"
+                onClick={() => handleCopyOferta(demanda)}
+                className="mt-4 w-full rounded-lg bg-blue-700 text-white px-4 py-2 font-medium hover:bg-blue-800 transition"
               >
                 📱 Copiar para WhatsApp
               </button>

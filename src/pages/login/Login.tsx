@@ -23,8 +23,6 @@ export const Login = () => {
       })
 
       const data = await response.json()
-      console.log('aaaaaaaa')
-      console.log(data)
 
       if (data.success) {
         const expirationTime = Date.now() + 30 * 60 * 1000
@@ -35,7 +33,7 @@ export const Login = () => {
             expiration: expirationTime,
           })
         )
-        navigate('/procurar')
+        navigate('/oferta')
       } else {
         Swal.fire({
           timer: 4000,

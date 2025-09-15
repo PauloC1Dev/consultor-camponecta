@@ -1,7 +1,8 @@
-import { Procurar } from '../pages/procurar/Procurar.tsx'
+import { Oferta } from '../pages/oferta/Oferta.tsx'
 import { createBrowserRouter, type RouteObject } from 'react-router-dom'
 import { PrivateRoute } from './privateRoute.tsx'
 import { Login } from '../pages/login/Login.tsx'
+import { Demanda } from '../pages/demanda/Demanda.tsx'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -12,10 +13,19 @@ const publicRoutes: RouteObject[] = [
 
 const privateRoutes: RouteObject[] = [
   {
-    path: '/procurar',
+    path: '/oferta',
     element: (
       <PrivateRoute>
-        <Procurar />
+        <Oferta />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: '/demanda',
+    element: (
+      <PrivateRoute>
+        <Demanda />
       </PrivateRoute>
     ),
   },
