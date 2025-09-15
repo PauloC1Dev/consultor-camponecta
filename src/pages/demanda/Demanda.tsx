@@ -224,7 +224,7 @@ export const Demanda = () => {
                 handleClick()
               }
             }}
-            className="w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
           />
         </div>
 
@@ -240,7 +240,7 @@ export const Demanda = () => {
                 handleClick()
               }
             }}
-            className="w-full max-w-[225px]  bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full max-w-[225px]  bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
           />
 
           <input
@@ -254,7 +254,7 @@ export const Demanda = () => {
                 handleClick()
               }
             }}
-            className="w-full max-w-[225px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full max-w-[225px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
           />
         </div>
 
@@ -280,7 +280,7 @@ export const Demanda = () => {
             onClick={handleCopyAllOferta}
             className="w-full rounded-lg bg-blue-800 text-white px-4 py-3 font-semibold shadow hover:bg-blue-900 transition"
           >
-            📱 Copiar todas as ofertas
+            📱 Copiar todas as demandas
           </button>
         </div>
       )}
