@@ -198,7 +198,7 @@ export const Oferta = () => {
       <div className="w-full max-w-4xl flex flex-col gap-4 mb-6">
         <div className="flex justify-center gap-21">
           <button type="button" disabled={true}>
-            <ArrowBigLeft size={35} className=" text-emerald-600" />
+            <ArrowBigLeft size={35} color="grey" />
           </button>
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Procurar ofertas
@@ -216,6 +216,7 @@ export const Oferta = () => {
             type="text"
             placeholder="Nome do produto"
             value={inputNome}
+            maxLength={50}
             onChange={(e) => setInputNome(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -231,6 +232,7 @@ export const Oferta = () => {
           <input
             type="text"
             placeholder="Estado"
+            maxLength={50}
             value={inputEstado}
             onChange={(e) => setInputEstado(e.target.value)}
             onKeyDown={(e) => {
@@ -245,6 +247,7 @@ export const Oferta = () => {
           <input
             type="text"
             placeholder="Cidade"
+            maxLength={50}
             value={inputCidade}
             onChange={(e) => setInputCidade(e.target.value)}
             onKeyDown={(e) => {

@@ -195,7 +195,7 @@ export const Demanda = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-blue-100 to-blue-200">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-blue-100 to-blue-400">
       <div className="w-full max-w-4xl flex flex-col gap-4 mb-6">
         <div className="flex justify-center gap-15">
           <button
@@ -209,13 +209,14 @@ export const Demanda = () => {
             Procurar demandas
           </h1>
           <button type="button" disabled={true}>
-            <ArrowBigRight size={35} color="blue" />
+            <ArrowBigRight size={35} color="grey" />
           </button>
         </div>
         <div className="flex sm:flex-row w-full justify-center">
           <input
             type="text"
             placeholder="Nome do produto"
+            maxLength={50}
             value={inputNome}
             onChange={(e) => setInputNome(e.target.value)}
             onKeyDown={(e) => {
@@ -232,6 +233,7 @@ export const Demanda = () => {
           <input
             type="text"
             placeholder="Estado"
+            maxLength={50}
             value={inputEstado}
             onChange={(e) => setInputEstado(e.target.value)}
             onKeyDown={(e) => {
@@ -246,6 +248,7 @@ export const Demanda = () => {
           <input
             type="text"
             placeholder="Cidade"
+            maxLength={50}
             value={inputCidade}
             onChange={(e) => setInputCidade(e.target.value)}
             onKeyDown={(e) => {
