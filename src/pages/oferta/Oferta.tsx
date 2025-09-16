@@ -19,7 +19,7 @@ export const Oferta = () => {
   const [inputEstado, setInputEstado] = useState('')
   const [inputCidade, setInputCidade] = useState('')
 
-  const { data: ofertas, error } = useQuery<any[]>({
+  const { data: ofertas } = useQuery<any[]>({
     queryKey: ['ofertas', ofertaNome, ofertaEstado, ofertaCidade],
     queryFn: async () => {
       let query = supabase.from('ofertas').select(`
@@ -66,10 +66,6 @@ export const Oferta = () => {
       return data || []
     },
   })
-
-  if (error) {
-    throw new Error(error.message)
-  }
 
   const handleClick = () => {
     const params: any = {}

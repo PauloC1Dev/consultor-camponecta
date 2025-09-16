@@ -2,16 +2,20 @@ import Swal from 'sweetalert2'
 import { supabase } from '../db/supabaseClient'
 import { useQuery } from '@tanstack/react-query'
 
-export const useEstados = () => {
+export const useUsers = () => {
   const aaa = 'aaaaa'
 
-  const { data: estadosList } = useQuery<any[]>({
-    queryKey: ['estados'],
+  const { data: usuarioList } = useQuery<any[]>({
+    queryKey: ['usuarios'],
     queryFn: async () => {
-      let query = supabase.from('estados').select(`
+      let query = supabase.from('usuarios').select(`
         id,
-        nome
+        tipo,
+        nome,
+        telefone
       `)
+
+      query = query.eq('tipo', 'comprador')
 
       const { data, error } = await query
 
@@ -31,9 +35,9 @@ export const useEstados = () => {
     },
   })
 
-  const getEstadoById = (id: any) => {
-    return estadosList?.find((estado) => estado.id === id) || null
+  const getUsuarioeById = (id: any) => {
+    return usuarioList?.find((usuario) => usuario.id === id) || null
   }
 
-  return { aaa, estadosList, getEstadoById }
+  return { aaa, usuarioList, getUsuarioeById }
 }

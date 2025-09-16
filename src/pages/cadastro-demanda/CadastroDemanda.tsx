@@ -1,15 +1,18 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '../../db/supabaseClient'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Controller, useForm } from 'react-hook-form'
-import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react'
-import { Autocomplete, TextField } from '@mui/material'
+import { useEstados } from '../../hooks/useEstado'
+import { useCidades } from '../../hooks/useCidade'
+import { useUsers } from '../../hooks/useUsers'
+import { supabase } from '../../db/supabaseClient'
+import Swal from 'sweetalert2'
+import { validadorCadastroDemanda } from '../../utils/validadorCadastroDemanda'
 
 export const CadastrarDemanda = () => {
   const navigate = useNavigate()
+
   const {
+    reset,
     watch,
     register,
     handleSubmit,
@@ -20,21 +23,94 @@ export const CadastrarDemanda = () => {
 
   const estadoSelecionado = watch('estadoDemanda')
 
-  const onSubmit = (data: any) => {
-    console.log('data')
-    console.log(data)
+  const { usuarioList, getUsuarioeById } = useUsers()
+  const { estadosList, getEstadoById } = useEstados()
+  const { cidadeList, getCidadeById } = useCidades(estadoSelecionado)
+
+  const onSubmit = async (demandaData: any) => {
+    try {
+      const validacao = validadorCadastroDemanda(
+        demandaData,
+        getUsuarioeById,
+        getEstadoById,
+        getCidadeById
+      )
+
+      if (!validacao.isValid) {
+        console.log(
+          '❌ Validação da criação de demanda falhou:',
+          validacao.error
+        )
+        return
+      }
+
+      const { error } = await supabase
+        .from('demandas')
+        .insert([
+          {
+            usuario_id: parseInt(demandaData.usuarioDemanda),
+            nome: demandaData.nomeDemanda,
+            tipo: demandaData.tipoDemanda,
+            quantidade: parseInt(demandaData.quantidadeDemanda),
+            valor: parseFloat(demandaData.valorDemanda),
+            data_validade_inicio: new Date().toISOString().split('T')[0],
+            data_validade_fim: demandaData.dataFim,
+            estado_id: parseInt(demandaData.estadoDemanda),
+            cidade_id: parseInt(demandaData.cidadeDemanda),
+            unidade_medida: 'kg',
+            logistica_propria:
+              demandaData.logisticaDemanda === 'Sim' ? true : false,
+            estado: getEstadoById(parseInt(demandaData.estadoDemanda))?.nome,
+            cidade: getCidadeById(parseInt(demandaData.cidadeDemanda))?.nome,
+            usuario_nome: getUsuarioeById(parseInt(demandaData.usuarioDemanda))
+              ?.nome,
+            usuario_telefone: getUsuarioeById(
+              parseInt(demandaData.usuarioDemanda)
+            )?.telefone,
+            deleted_at: null,
+          },
+        ])
+        .select()
+
+      if (error) {
+        Swal.fire({
+          timer: 4000,
+          icon: 'error',
+          showCancelButton: false,
+          title: 'Falha no cadastro da demanda!',
+          text: 'Entre em contato com o administrador ou tente novamente.',
+        })
+        throw new Error(error.message)
+      }
+
+      Swal.fire({
+        timer: 2500,
+        icon: 'success',
+        showCancelButton: false,
+        title: 'Nova demanda cadastrada!',
+      })
+
+      return navigate('/demanda')
+    } catch (error) {
+      Swal.fire({
+        timer: 4000,
+        icon: 'error',
+        showCancelButton: false,
+        title: 'Falha no cadastro da demanda!',
+        text: 'Entre em contato com o administrador ou tente novamente.',
+      })
+    }
   }
 
-  const cidadesPorEstado: Record<string, string[]> = {
-    'sao-paulo': ['São Paulo', 'Campinas', 'Santos', 'Ribeirão Preto'],
-    'rio de janeiro': ['Rio de Janeiro', 'Niterói', 'Petrópolis', 'Cabo Frio'],
-    'minas-gerais': [
-      'Belo Horizonte',
-      'Uberlândia',
-      'Ouro Preto',
-      'Juiz de Fora',
-    ],
-    bahia: ['Salvador', 'Feira de Santana', 'Ilhéus', 'Vitória da Conquista'],
+  const getDateString = (daysToAdd = 0) => {
+    const date = new Date()
+    date.setDate(date.getDate() + daysToAdd)
+    return date.toISOString().split('T')[0]
+  }
+  const minDate = getDateString(1)
+
+  const clearForm = () => {
+    reset()
   }
 
   return (
@@ -61,11 +137,12 @@ export const CadastrarDemanda = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <div className="flex sm:flex-col w-full justify-center mb-5">
+              <p>Qual o nome do produto ?</p>
               <input
                 type="text"
-                placeholder="Nome do produto"
+                placeholder="Ex: Abacaxi..."
                 {...register('nomeDemanda', {
-                  required: 'O nome é obrigatório',
+                  required: 'O nome do produto é obrigatório',
                   maxLength: {
                     value: 50,
                     message: 'Máximo de 50 caracteres permitidos',
@@ -75,7 +152,6 @@ export const CadastrarDemanda = () => {
                  ${errors.nomeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}
             `}
               />
-
               {errors.nomeDemanda && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.nomeDemanda.message as string}
@@ -84,20 +160,20 @@ export const CadastrarDemanda = () => {
             </div>
 
             <div className="flex sm:flex-col w-full justify-center mb-5">
+              <p>Quantos quilos está precisando ?</p>
               <input
-                type="text"
-                placeholder="Quantidade do produto"
+                type="number"
+                placeholder="Apenas números"
                 {...register('quantidadeDemanda', {
                   required: 'A quantidade é obrigatória',
-                  maxLength: {
-                    value: 50,
-                    message: 'Máximo de 50 caracteres permitidos',
+                  max: {
+                    value: 99,
+                    message: 'valor máximo de 99 kg',
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700
                  ${errors.quantidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               />
-
               {errors.quantidadeDemanda && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors?.quantidadeDemanda?.message as string}
@@ -106,14 +182,15 @@ export const CadastrarDemanda = () => {
             </div>
 
             <div className="flex sm:flex-col w-full justify-center mb-5">
+              <p>Quanto está disposto a pagar ?</p>
               <input
-                type="text"
-                placeholder="Valor do produto"
+                type="number"
+                placeholder="Valor R$ por quilo, apenas número"
                 {...register('valorDemanda', {
                   required: 'O valor é obrigatório',
-                  maxLength: {
-                    value: 50,
-                    message: 'Máximo de 50 caracteres permitidos',
+                  max: {
+                    value: 99,
+                    message: 'valor máximo de 99 reais por quilo',
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
@@ -127,19 +204,20 @@ export const CadastrarDemanda = () => {
             </div>
 
             <div className="flex sm:flex-col w-full justify-center mb-5">
-              <select
+              <p>Qual a categoria do produto ?</p>
+              <input
+                type="text"
+                placeholder="Fruta.. Legume.. Verdura.."
                 {...register('tipoDemanda', {
-                  required: 'O tipo é obrigatório',
+                  required: 'O valor é obrigatório',
+                  maxLength: {
+                    value: 50,
+                    message: 'Máximo de 50 caracteres permitidos',
+                  },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
                  ${errors.tipoDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
-              >
-                <option value="">Selecione o tipo do produto</option>
-                <option value="sao-paulo">São Paulo</option>
-                <option value="rio de janeiro">Rio de Janeiro</option>
-                <option value="minas-gerais">Minas Gerais</option>
-                <option value="bahia">Bahia</option>
-              </select>
+              />
               {errors.tipoDemanda && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors?.tipoDemanda?.message as string}
@@ -148,6 +226,36 @@ export const CadastrarDemanda = () => {
             </div>
 
             <div className="flex sm:flex-col w-full justify-center mb-5">
+              <p>Até quando precisa do produto ?</p>
+              <input
+                type="date"
+                {...register('dataFim', {
+                  required: 'A data de validade final é obrigatória',
+                  validate: {
+                    minDate: (value) => {
+                      const selected = new Date(value)
+                      const tomorrow = new Date()
+                      tomorrow.setDate(tomorrow.getDate() + 1)
+                      return (
+                        selected >= tomorrow ||
+                        'Data mínima para 2 dias a partir de hoje'
+                      )
+                    },
+                  },
+                })}
+                min={minDate}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
+                 ${errors.dataFim ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+              />
+              {errors.dataFim && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors?.dataFim?.message as string}
+                </p>
+              )}
+            </div>
+
+            <div className="flex sm:flex-col w-full justify-center mb-5">
+              <p>Qual o estado da entrega ?</p>
               <select
                 {...register('estadoDemanda', {
                   required: 'O estado é obrigatório',
@@ -156,10 +264,11 @@ export const CadastrarDemanda = () => {
                  ${errors.estadoDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               >
                 <option value="">Selecione um estado</option>
-                <option value="sao-paulo">São Paulo</option>
-                <option value="rio de janeiro">Rio de Janeiro</option>
-                <option value="minas-gerais">Minas Gerais</option>
-                <option value="bahia">Bahia</option>
+                {(estadosList || []).map((estado) => (
+                  <option key={estado.id} value={estado.id}>
+                    {estado.nome}
+                  </option>
+                ))}
               </select>
               {errors.estadoDemanda && (
                 <p className="text-red-500 text-sm mt-1">
@@ -169,6 +278,7 @@ export const CadastrarDemanda = () => {
             </div>
 
             <div className="flex sm:flex-col w-full justify-center mb-5">
+              <p>Qual a cidade da entrega ?</p>
               <select
                 {...register('cidadeDemanda', {
                   required: 'A cidade é obrigatória',
@@ -177,9 +287,9 @@ export const CadastrarDemanda = () => {
                  ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               >
                 <option value="">Selecione uma cidade</option>
-                {cidadesPorEstado[estadoSelecionado]?.map((cidade) => (
-                  <option key={cidade} value={cidade}>
-                    {cidade}
+                {(cidadeList || []).map((cidade) => (
+                  <option key={cidade.id} value={cidade.id}>
+                    {cidade.nome}
                   </option>
                 ))}
               </select>
@@ -192,6 +302,7 @@ export const CadastrarDemanda = () => {
           </div>
 
           <div className="flex sm:flex-col w-full justify-center mb-5">
+            <p>Qual cliente solicitou a demana ?</p>
             <select
               {...register('usuarioDemanda', {
                 required: 'O usuário é obrigatório',
@@ -200,15 +311,37 @@ export const CadastrarDemanda = () => {
                  ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
             >
               <option value="">Selecione um cliente</option>
-              <option value="sao-paulo">São Paulo</option>
-              <option value="rio de janeiro">Rio de Janeiro</option>
-              <option value="minas-gerais">Minas Gerais</option>
-              <option value="bahia">Bahia</option>
+              {(usuarioList || []).map((usuario) => (
+                <option key={usuario.id} value={usuario.id}>
+                  {usuario.nome}
+                </option>
+              ))}
             </select>
-
             {errors.usuarioDemanda && (
               <p className="text-red-500 text-sm mt-1">
                 {errors?.usuarioDemanda?.message as string}
+              </p>
+            )}
+          </div>
+
+          <div className="flex sm:flex-col w-full justify-center mb-5">
+            <p>Cliente fornecerá a logística ?</p>
+            <select
+              {...register('logisticaDemanda', {
+                required: 'Sim ou não ?',
+              })}
+              className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
+                 ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+            >
+              <option value="">Logística</option>
+
+              <option value={'Sim'}>Sim</option>
+
+              <option value={'Não'}>Não</option>
+            </select>
+            {errors.logisticaDemanda && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors?.logisticaDemanda?.message as string}
               </p>
             )}
           </div>
@@ -217,9 +350,10 @@ export const CadastrarDemanda = () => {
             <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-blue-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition">
               Cadastrar
             </button>
+
             <button
               type="button"
-              onClick={() => {}}
+              onClick={() => clearForm()}
               className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-gray-400 text-white px-6 py-2 font-medium hover:bg-gray-500 transition"
             >
               Limpar

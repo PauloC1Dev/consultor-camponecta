@@ -19,7 +19,7 @@ export const Demanda = () => {
   const [inputCidade, setInputCidade] = useState('')
   const [inputEstado, setInputEstado] = useState('')
 
-  const { data: demandas, error } = useQuery<any[]>({
+  const { data: demandas } = useQuery<any[]>({
     queryKey: ['demandas', demandaNome, demandaEstado, demandaCidade],
     queryFn: async () => {
       let query = supabase.from('demandas').select(`
@@ -60,17 +60,12 @@ export const Demanda = () => {
           title: 'Falha na conexão com o banco!',
           text: 'Entre em contato com o administrador ou tente novamente.',
         })
-        console.log(error)
         throw new Error(error.message)
       }
 
       return data || []
     },
   })
-
-  if (error) {
-    throw new Error(error.message)
-  }
 
   const handleClick = () => {
     const params: any = {}
