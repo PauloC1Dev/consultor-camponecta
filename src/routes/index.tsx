@@ -11,16 +11,6 @@ const publicRoutes: RouteObject[] = [
     path: '/',
     element: <Login />,
   },
-
-  {
-    path: '/cadastrar-demanda',
-    element: <CadastrarDemanda />,
-  },
-
-  {
-    path: '/cadastrar-oferta',
-    element: <CadastrarOferta />,
-  },
 ]
 
 const privateRoutes: RouteObject[] = [
@@ -38,6 +28,24 @@ const privateRoutes: RouteObject[] = [
     element: (
       <PrivateRoute>
         <Demanda />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: '/cadastrar-demanda',
+    element: (
+      <PrivateRoute>
+        <CadastrarDemanda />,
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: '/cadastrar-oferta',
+    element: (
+      <PrivateRoute>
+        <CadastrarOferta />,
       </PrivateRoute>
     ),
   },
