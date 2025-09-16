@@ -203,8 +203,12 @@ export const Demanda = () => {
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Procurar demandas
           </h1>
-          <button type="button" disabled={true}>
-            <ArrowBigRight size={35} color="grey" />
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => navigate('/cadastrar-demanda')}
+          >
+            <ArrowBigRight size={35} color="blue" />
           </button>
         </div>
         <div className="flex sm:flex-row w-full justify-center">

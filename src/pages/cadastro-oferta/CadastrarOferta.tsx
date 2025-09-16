@@ -114,23 +114,27 @@ export const CadastrarOferta = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-green-50 to-green-200">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-green-100 to-green-200">
       <div className="w-full max-w-md flex flex-col justify-center gap-4 mb-6">
-        <div className="flex justify-center gap-15">
+        <div className="flex justify-center gap-18">
           <button
             type="button"
             className="cursor-pointer"
             onClick={() => navigate('/oferta')}
           >
-            <ArrowBigLeft size={35} color="blue" />
+            <ArrowBigLeft size={35} className=" text-emerald-600" />
           </button>
 
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Cadastrar oferta
           </h1>
 
-          <button type="button" disabled={true}>
-            <ArrowBigRight size={35} color="grey" />
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => navigate('/oferta')}
+          >
+            <ArrowBigRight size={35} className=" text-emerald-600" />
           </button>
         </div>
 
@@ -149,7 +153,7 @@ export const CadastrarOferta = () => {
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2
-                 ${errors.nomeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}
+                 ${errors.nomeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}
             `}
               />
               {errors.nomeOferta && (
@@ -175,8 +179,8 @@ export const CadastrarOferta = () => {
                     message: 'valor máximo de 99 kg',
                   },
                 })}
-                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700
-                 ${errors.quantidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500
+                 ${errors.quantidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               />
               {errors.quantidadeOferta && (
                 <p className="text-red-500 text-sm mt-1">
@@ -201,8 +205,8 @@ export const CadastrarOferta = () => {
                     message: 'valor máximo de 99 reais por quilo',
                   },
                 })}
-                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.valorOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.valorOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               />
               {errors.valorOferta && (
                 <p className="text-red-500 text-sm mt-1">
@@ -223,8 +227,8 @@ export const CadastrarOferta = () => {
                     message: 'Máximo de 50 caracteres permitidos',
                   },
                 })}
-                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.tipoOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.tipoOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               />
               {errors.tipoOferta && (
                 <p className="text-red-500 text-sm mt-1">
@@ -252,8 +256,8 @@ export const CadastrarOferta = () => {
                   },
                 })}
                 min={minDate}
-                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.dataFim ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.dataFim ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               />
               {errors.dataFim && (
                 <p className="text-red-500 text-sm mt-1">
@@ -268,8 +272,8 @@ export const CadastrarOferta = () => {
                 {...register('estadoOferta', {
                   required: 'O estado é obrigatório',
                 })}
-                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.estadoOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.estadoOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               >
                 <option value="">Selecione um estado</option>
                 {(estadosList || []).map((estado) => (
@@ -291,8 +295,8 @@ export const CadastrarOferta = () => {
                 {...register('cidadeOferta', {
                   required: 'A cidade é obrigatória',
                 })}
-                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               >
                 <option value="">Selecione uma cidade</option>
                 {(cidadeList || []).map((cidade) => (
@@ -315,8 +319,8 @@ export const CadastrarOferta = () => {
               {...register('usuarioOferta', {
                 required: 'O usuário é obrigatório',
               })}
-              className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+              className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
             >
               <option value="">Selecione um cliente</option>
               {(usuarioList || []).map((usuario) => (
@@ -338,8 +342,8 @@ export const CadastrarOferta = () => {
               {...register('logisticaOferta', {
                 required: 'Sim ou não ?',
               })}
-              className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+              className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
             >
               <option value="">Logística</option>
 
@@ -358,12 +362,12 @@ export const CadastrarOferta = () => {
             <button
               type="button"
               onClick={() => clearForm()}
-              className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-gray-400 text-white px-6 py-2 font-medium hover:bg-gray-500 transition"
+              className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-gray-400 text-white px-6 py-2 font-medium hover:bg-gray-500 transition cursor-pointer"
             >
               Limpar
             </button>
 
-            <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-green-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition">
+            <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg cursor-pointer bg-green-700 hover:bg-green-800 text-white px-6 py-2 font-medium focus:ring-green-900 transition">
               Cadastrar
             </button>
           </div>

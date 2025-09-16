@@ -202,7 +202,7 @@ export const Oferta = () => {
           <button
             className="cursor-pointer"
             type="button"
-            onClick={() => navigate('/demanda')}
+            onClick={() => navigate('/cadastrar-oferta')}
           >
             <ArrowBigRight size={35} className=" text-emerald-600" />
           </button>

@@ -115,22 +115,22 @@ export const CadastrarDemanda = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-blue-100 to-blue-300">
-      <div className="w-full max-w-md flex flex-col justify-center gap-4 mb-6">
-        <div className="flex justify-center gap-15">
+      <div className="w-full max-w-md flex flex-col justify-center gap-3 mb-6">
+        <div className="flex justify-center gap-12">
           <button
             type="button"
             className="cursor-pointer"
-            onClick={() => navigate('/oferta')}
+            onClick={() => navigate('/demanda')}
           >
             <ArrowBigLeft size={35} color="blue" />
           </button>
 
-          <h1 className="text-2xl font-bold text-gray-800 text-center mb-2 font-sans">
+          <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Cadastrar demanda
           </h1>
 
-          <button type="button" disabled={true}>
-            <ArrowBigRight size={35} color="grey" />
+          <button type="button" onClick={() => navigate('/demanda')}>
+            <ArrowBigRight size={35} color="blue" />
           </button>
         </div>
 
@@ -358,12 +358,12 @@ export const CadastrarDemanda = () => {
             <button
               type="button"
               onClick={() => clearForm()}
-              className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-gray-400 text-white px-6 py-2 font-medium hover:bg-gray-500 transition"
+              className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-gray-400 text-white px-6 py-2 font-medium hover:bg-gray-500 transition cursor-pointer"
             >
               Limpar
             </button>
 
-            <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-blue-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition">
+            <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-blue-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition cursor-pointer">
               Cadastrar
             </button>
           </div>
