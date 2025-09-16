@@ -6,9 +6,9 @@ import { useCidades } from '../../hooks/useCidade'
 import { useUsers } from '../../hooks/useUsers'
 import { supabase } from '../../db/supabaseClient'
 import Swal from 'sweetalert2'
-import { validadorCadastroDemanda } from '../../utils/validadorCadastroDemanda'
+import { validadorCadastroOferta } from '../../utils/validadorCadastroOferta'
 
-export const CadastrarDemanda = () => {
+export const CadastrarOferta = () => {
   const navigate = useNavigate()
 
   const {
@@ -21,16 +21,16 @@ export const CadastrarDemanda = () => {
     mode: 'onChange',
   })
 
-  const estadoSelecionado = watch('estadoDemanda')
+  const estadoSelecionado = watch('estadoOferta')
 
   const { estadosList, getEstadoById } = useEstados()
-  const { usuarioList, getUsuarioeById } = useUsers('comprador')
+  const { usuarioList, getUsuarioeById } = useUsers('produtor')
   const { cidadeList, getCidadeById } = useCidades(estadoSelecionado)
 
-  const onSubmit = async (demandaData: any) => {
+  const onSubmit = async (ofertaData: any) => {
     try {
-      const validacao = validadorCadastroDemanda(
-        demandaData,
+      const validacao = validadorCadastroOferta(
+        ofertaData,
         getUsuarioeById,
         getEstadoById,
         getCidadeById
@@ -38,34 +38,34 @@ export const CadastrarDemanda = () => {
 
       if (!validacao.isValid) {
         console.log(
-          '❌ Validação da criação de demanda falhou:',
+          '❌ Validação da criação de oferta falhou:',
           validacao.error
         )
         return
       }
 
       const { error } = await supabase
-        .from('demandas')
+        .from('ofertas')
         .insert([
           {
-            usuario_id: parseInt(demandaData.usuarioDemanda),
-            nome: demandaData.nomeDemanda,
-            tipo: demandaData.tipoDemanda,
-            quantidade: parseInt(demandaData.quantidadeDemanda),
-            valor: parseFloat(demandaData.valorDemanda),
+            usuario_id: parseInt(ofertaData.usuarioOferta),
+            nome: ofertaData.nomeOferta,
+            tipo: ofertaData.tipoOferta,
+            quantidade: parseInt(ofertaData.quantidadeOferta),
+            valor: parseFloat(ofertaData.valorOferta),
             data_validade_inicio: new Date().toISOString().split('T')[0],
-            data_validade_fim: demandaData.dataFim,
-            estado_id: parseInt(demandaData.estadoDemanda),
-            cidade_id: parseInt(demandaData.cidadeDemanda),
+            data_validade_fim: ofertaData.dataFim,
+            estado_id: parseInt(ofertaData.estadoOferta),
+            cidade_id: parseInt(ofertaData.cidadeOferta),
             unidade_medida: 'kg',
             logistica_propria:
-              demandaData.logisticaDemanda === 'Sim' ? true : false,
-            estado: getEstadoById(parseInt(demandaData.estadoDemanda))?.nome,
-            cidade: getCidadeById(parseInt(demandaData.cidadeDemanda))?.nome,
-            usuario_nome: getUsuarioeById(parseInt(demandaData.usuarioDemanda))
+              ofertaData.logisticaOferta === 'Sim' ? true : false,
+            estado: getEstadoById(parseInt(ofertaData.estadoOferta))?.nome,
+            cidade: getCidadeById(parseInt(ofertaData.cidadeOferta))?.nome,
+            usuario_nome: getUsuarioeById(parseInt(ofertaData.usuarioOferta))
               ?.nome,
             usuario_telefone: getUsuarioeById(
-              parseInt(demandaData.usuarioDemanda)
+              parseInt(ofertaData.usuarioOferta)
             )?.telefone,
             deleted_at: null,
           },
@@ -77,7 +77,7 @@ export const CadastrarDemanda = () => {
           timer: 4000,
           icon: 'error',
           showCancelButton: false,
-          title: 'Falha no cadastro da demanda!',
+          title: 'Falha no cadastro da oferta!',
           text: 'Entre em contato com o administrador ou tente novamente.',
         })
         throw new Error(error.message)
@@ -87,16 +87,16 @@ export const CadastrarDemanda = () => {
         timer: 2500,
         icon: 'success',
         showCancelButton: false,
-        title: 'Nova demanda cadastrada!',
+        title: 'Nova oferta cadastrada!',
       })
 
-      return navigate('/demanda')
+      return navigate('/oferta')
     } catch (error) {
       Swal.fire({
         timer: 4000,
         icon: 'error',
         showCancelButton: false,
-        title: 'Falha no cadastro da demanda!',
+        title: 'Falha no cadastro da oferta!',
         text: 'Entre em contato com o administrador ou tente novamente.',
       })
     }
@@ -114,7 +114,7 @@ export const CadastrarDemanda = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-blue-100 to-blue-300">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-green-50 to-green-200">
       <div className="w-full max-w-md flex flex-col justify-center gap-4 mb-6">
         <div className="flex justify-center gap-15">
           <button
@@ -125,8 +125,8 @@ export const CadastrarDemanda = () => {
             <ArrowBigLeft size={35} color="blue" />
           </button>
 
-          <h1 className="text-2xl font-bold text-gray-800 text-center mb-2 font-sans">
-            Cadastrar demanda
+          <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
+            Cadastrar oferta
           </h1>
 
           <button type="button" disabled={true}>
@@ -141,7 +141,7 @@ export const CadastrarDemanda = () => {
               <input
                 type="text"
                 placeholder="Ex: Abacaxi..."
-                {...register('nomeDemanda', {
+                {...register('nomeOferta', {
                   required: 'O nome do produto é obrigatório',
                   maxLength: {
                     value: 50,
@@ -149,12 +149,12 @@ export const CadastrarDemanda = () => {
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border px-4 py-2 focus:outline-none focus:ring-2
-                 ${errors.nomeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}
+                 ${errors.nomeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}
             `}
               />
-              {errors.nomeDemanda && (
+              {errors.nomeOferta && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.nomeDemanda.message as string}
+                  {errors.nomeOferta.message as string}
                 </p>
               )}
             </div>
@@ -164,7 +164,7 @@ export const CadastrarDemanda = () => {
               <input
                 type="number"
                 placeholder="Apenas números"
-                {...register('quantidadeDemanda', {
+                {...register('quantidadeOferta', {
                   required: 'A quantidade é obrigatória',
                   min: {
                     value: 0.01,
@@ -176,11 +176,11 @@ export const CadastrarDemanda = () => {
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700
-                 ${errors.quantidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.quantidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               />
-              {errors.quantidadeDemanda && (
+              {errors.quantidadeOferta && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors?.quantidadeDemanda?.message as string}
+                  {errors?.quantidadeOferta?.message as string}
                 </p>
               )}
             </div>
@@ -190,7 +190,7 @@ export const CadastrarDemanda = () => {
               <input
                 type="number"
                 placeholder="Valor R$ por quilo, apenas número"
-                {...register('valorDemanda', {
+                {...register('valorOferta', {
                   required: 'O valor é obrigatório',
                   min: {
                     value: 0.01,
@@ -202,11 +202,11 @@ export const CadastrarDemanda = () => {
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.valorDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.valorOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               />
-              {errors.valorDemanda && (
+              {errors.valorOferta && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors?.valorDemanda?.message as string}
+                  {errors?.valorOferta?.message as string}
                 </p>
               )}
             </div>
@@ -216,7 +216,7 @@ export const CadastrarDemanda = () => {
               <input
                 type="text"
                 placeholder="Fruta.. Legume.. Verdura.."
-                {...register('tipoDemanda', {
+                {...register('tipoOferta', {
                   required: 'O valor é obrigatório',
                   maxLength: {
                     value: 50,
@@ -224,11 +224,11 @@ export const CadastrarDemanda = () => {
                   },
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.tipoDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.tipoOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               />
-              {errors.tipoDemanda && (
+              {errors.tipoOferta && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors?.tipoDemanda?.message as string}
+                  {errors?.tipoOferta?.message as string}
                 </p>
               )}
             </div>
@@ -265,11 +265,11 @@ export const CadastrarDemanda = () => {
             <div className="flex-col sm:flex-col w-full justify-center mb-5">
               <p>Qual o estado da entrega ?</p>
               <select
-                {...register('estadoDemanda', {
+                {...register('estadoOferta', {
                   required: 'O estado é obrigatório',
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.estadoDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.estadoOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               >
                 <option value="">Selecione um estado</option>
                 {(estadosList || []).map((estado) => (
@@ -278,9 +278,9 @@ export const CadastrarDemanda = () => {
                   </option>
                 ))}
               </select>
-              {errors.estadoDemanda && (
+              {errors.estadoOferta && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors?.estadoDemanda?.message as string}
+                  {errors?.estadoOferta?.message as string}
                 </p>
               )}
             </div>
@@ -288,11 +288,11 @@ export const CadastrarDemanda = () => {
             <div className="flex-col sm:flex-col w-full justify-center mb-5">
               <p>Qual a cidade da entrega ?</p>
               <select
-                {...register('cidadeDemanda', {
+                {...register('cidadeOferta', {
                   required: 'A cidade é obrigatória',
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               >
                 <option value="">Selecione uma cidade</option>
                 {(cidadeList || []).map((cidade) => (
@@ -301,9 +301,9 @@ export const CadastrarDemanda = () => {
                   </option>
                 ))}
               </select>
-              {errors.cidadeDemanda && (
+              {errors.cidadeOferta && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors?.cidadeDemanda?.message as string}
+                  {errors?.cidadeOferta?.message as string}
                 </p>
               )}
             </div>
@@ -312,11 +312,11 @@ export const CadastrarDemanda = () => {
           <div className="flex-col sm:flex-col w-full justify-center mb-5">
             <p>Qual cliente solicitou a demana ?</p>
             <select
-              {...register('usuarioDemanda', {
+              {...register('usuarioOferta', {
                 required: 'O usuário é obrigatório',
               })}
               className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
             >
               <option value="">Selecione um cliente</option>
               {(usuarioList || []).map((usuario) => (
@@ -325,9 +325,9 @@ export const CadastrarDemanda = () => {
                 </option>
               ))}
             </select>
-            {errors.usuarioDemanda && (
+            {errors.usuarioOferta && (
               <p className="text-red-500 text-sm mt-1">
-                {errors?.usuarioDemanda?.message as string}
+                {errors?.usuarioOferta?.message as string}
               </p>
             )}
           </div>
@@ -335,11 +335,11 @@ export const CadastrarDemanda = () => {
           <div className="flex-col sm:flex-col w-full justify-center mb-5">
             <p>Cliente fornecerá a logística ?</p>
             <select
-              {...register('logisticaDemanda', {
+              {...register('logisticaOferta', {
                 required: 'Sim ou não ?',
               })}
               className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                 ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
+                 ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
             >
               <option value="">Logística</option>
 
@@ -347,9 +347,9 @@ export const CadastrarDemanda = () => {
 
               <option value={'Não'}>Não</option>
             </select>
-            {errors.logisticaDemanda && (
+            {errors.logisticaOferta && (
               <p className="text-red-500 text-sm mt-1">
-                {errors?.logisticaDemanda?.message as string}
+                {errors?.logisticaOferta?.message as string}
               </p>
             )}
           </div>
@@ -363,7 +363,7 @@ export const CadastrarDemanda = () => {
               Limpar
             </button>
 
-            <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-blue-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition">
+            <button className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-green-700 text-white px-6 py-2 font-medium hover:bg-blue-800 transition">
               Cadastrar
             </button>
           </div>

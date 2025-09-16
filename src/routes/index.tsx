@@ -4,6 +4,7 @@ import { PrivateRoute } from './privateRoute.tsx'
 import { Login } from '../pages/login/Login.tsx'
 import { Demanda } from '../pages/demanda/Demanda.tsx'
 import { CadastrarDemanda } from '../pages/cadastro-demanda/CadastroDemanda.tsx'
+import { CadastrarOferta } from '../pages/cadastro-oferta/CadastrarOferta.tsx'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -14,6 +15,11 @@ const publicRoutes: RouteObject[] = [
   {
     path: '/cadastrar-demanda',
     element: <CadastrarDemanda />,
+  },
+
+  {
+    path: '/cadastrar-oferta',
+    element: <CadastrarOferta />,
   },
 ]
 

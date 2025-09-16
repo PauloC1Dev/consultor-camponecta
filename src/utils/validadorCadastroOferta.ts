@@ -1,12 +1,12 @@
 import Swal from 'sweetalert2'
 
-export const validadorCadastroDemanda = (
-  demandaData: any,
+export const validadorCadastroOferta = (
+  ofertaData: any,
   getUsuarioeById: any,
   getEstadoById: any,
   getCidadeById: any
 ) => {
-  if (!demandaData.usuarioDemanda || demandaData.usuarioDemanda.trim() === '') {
+  if (!ofertaData.usuarioOferta || ofertaData.usuarioOferta.trim() === '') {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
@@ -16,17 +16,17 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Usuário obrigatório' }
   }
 
-  if (!demandaData.nomeDemanda || demandaData.nomeDemanda.trim() === '') {
+  if (!ofertaData.nomeOferta || ofertaData.nomeOferta.trim() === '') {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
-      title: 'Nome da demanda obrigatório!',
+      title: 'Nome da oferta obrigatório!',
       text: 'Informe o nome do produto.',
     })
-    return { isValid: false, error: 'Nome da demanda obrigatório' }
+    return { isValid: false, error: 'Nome da oferta obrigatório' }
   }
 
-  if (!demandaData.estadoDemanda || demandaData.estadoDemanda === '') {
+  if (!ofertaData.estadoOferta || ofertaData.estadoOferta === '') {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
@@ -36,7 +36,7 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Estado obrigatório' }
   }
 
-  if (!demandaData.cidadeDemanda || demandaData.cidadeDemanda === '') {
+  if (!ofertaData.cidadeOferta || ofertaData.cidadeOferta === '') {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
@@ -46,7 +46,7 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Cidade obrigatória' }
   }
 
-  if (!demandaData.dataFim || demandaData.dataFim === '') {
+  if (!ofertaData.dataFim || ofertaData.dataFim === '') {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
@@ -56,7 +56,7 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Data de validade obrigatória' }
   }
 
-  const quantidade = parseInt(demandaData.quantidadeDemanda)
+  const quantidade = parseInt(ofertaData.quantidadeOferta)
   if (isNaN(quantidade) || quantidade <= 0) {
     Swal.fire({
       timer: 3000,
@@ -67,7 +67,7 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Quantidade inválida' }
   }
 
-  const valor = parseFloat(demandaData.valorDemanda)
+  const valor = parseFloat(ofertaData.valorOferta)
   if (isNaN(valor) || valor <= 0) {
     Swal.fire({
       timer: 3000,
@@ -78,9 +78,9 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Valor inválido' }
   }
 
-  const usuarioId = parseInt(demandaData.usuarioDemanda)
-  const estadoId = parseInt(demandaData.estadoDemanda)
-  const cidadeId = parseInt(demandaData.cidadeDemanda)
+  const usuarioId = parseInt(ofertaData.usuarioOferta)
+  const estadoId = parseInt(ofertaData.estadoOferta)
+  const cidadeId = parseInt(ofertaData.cidadeOferta)
 
   if (isNaN(usuarioId) || usuarioId <= 0) {
     Swal.fire({
@@ -146,7 +146,7 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Cidade não encontrada' }
   }
 
-  const dataFim = new Date(demandaData.dataFim)
+  const dataFim = new Date(ofertaData.dataFim)
   const amanha = new Date()
   amanha.setDate(amanha.getDate() + 1)
 
@@ -160,22 +160,22 @@ export const validadorCadastroDemanda = (
     return { isValid: false, error: 'Data de validade inválida' }
   }
 
-  if (demandaData.nomeDemanda.length > 255) {
+  if (ofertaData.nomeOferta.length > 255) {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
       title: 'Nome muito longo!',
-      text: 'O nome da demanda deve ter no máximo 255 caracteres.',
+      text: 'O nome da oferta deve ter no máximo 255 caracteres.',
     })
     return { isValid: false, error: 'Nome muito longo' }
   }
 
-  if (demandaData.tipoDemanda && demandaData.tipoDemanda.length > 100) {
+  if (ofertaData.tipoOferta && ofertaData.tipoOferta.length > 100) {
     Swal.fire({
       timer: 3000,
       icon: 'warning',
       title: 'Tipo muito longo!',
-      text: 'O tipo da demanda deve ter no máximo 100 caracteres.',
+      text: 'O tipo da oferta deve ter no máximo 100 caracteres.',
     })
     return { isValid: false, error: 'Tipo muito longo' }
   }
