@@ -166,6 +166,10 @@ export const CadastrarDemanda = () => {
                 placeholder="Apenas números"
                 {...register('quantidadeDemanda', {
                   required: 'A quantidade é obrigatória',
+                  min: {
+                    value: 0.01,
+                    message: 'O valor deve ser maior que zero',
+                  },
                   max: {
                     value: 99,
                     message: 'valor máximo de 99 kg',
@@ -188,6 +192,10 @@ export const CadastrarDemanda = () => {
                 placeholder="Valor R$ por quilo, apenas número"
                 {...register('valorDemanda', {
                   required: 'O valor é obrigatório',
+                  min: {
+                    value: 0.01,
+                    message: 'O valor deve ser maior que zero',
+                  },
                   max: {
                     value: 99,
                     message: 'valor máximo de 99 reais por quilo',
