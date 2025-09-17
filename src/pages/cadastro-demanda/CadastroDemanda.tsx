@@ -120,7 +120,7 @@ export const CadastrarDemanda = () => {
           <button
             type="button"
             className="cursor-pointer"
-            onClick={() => navigate('/demanda')}
+            onClick={() => navigate('/menu')}
           >
             <ArrowBigLeft size={35} color="blue" />
           </button>
@@ -129,7 +129,11 @@ export const CadastrarDemanda = () => {
             Cadastrar demanda
           </h1>
 
-          <button type="button" onClick={() => navigate('/demanda')}>
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => navigate('/demanda')}
+          >
             <ArrowBigRight size={35} color="blue" />
           </button>
         </div>

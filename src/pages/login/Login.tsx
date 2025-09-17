@@ -33,7 +33,7 @@ export const Login = () => {
             expiration: expirationTime,
           })
         )
-        navigate('/oferta')
+        navigate('/menu')
       } else {
         Swal.fire({
           timer: 4000,

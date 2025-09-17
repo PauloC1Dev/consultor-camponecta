@@ -196,7 +196,7 @@ export const Demanda = () => {
           <button
             type="button"
             className="cursor-pointer"
-            onClick={() => navigate('/oferta')}
+            onClick={() => navigate('/menu')}
           >
             <ArrowBigLeft size={35} color="blue" />
           </button>

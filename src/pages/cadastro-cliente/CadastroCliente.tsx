@@ -79,7 +79,7 @@ export const CadastroCliente = () => {
           <button
             type="button"
             className="cursor-pointer"
-            onClick={() => navigate('/cliente')}
+            onClick={() => navigate('/menu')}
           >
             <ArrowBigLeft size={35} className=" text-purple-600" />
           </button>

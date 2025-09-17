@@ -193,20 +193,25 @@ export const Oferta = () => {
     <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-green-100 to-green-200">
       <div className="w-full max-w-4xl flex flex-col gap-4 mb-6">
         <div className="flex justify-center gap-21">
-          <button type="button" disabled={true}>
-            <ArrowBigLeft size={35} color="grey" />
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => navigate('/menu')}
+          >
+            <ArrowBigLeft size={35} className=" text-emerald-600" />
           </button>
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Procurar ofertas
           </h1>
           <button
-            className="cursor-pointer"
             type="button"
+            className="cursor-pointer"
             onClick={() => navigate('/cadastrar-oferta')}
           >
             <ArrowBigRight size={35} className=" text-emerald-600" />
           </button>
         </div>
+
         <div className="flex sm:flex-row w-full justify-center">
           <input
             type="text"

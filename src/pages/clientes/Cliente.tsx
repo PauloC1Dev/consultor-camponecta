@@ -120,15 +120,19 @@ export const Cliente = () => {
     <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-gradient-to-b from-purple-100 to-purple-300">
       <div className="w-full max-w-4xl flex flex-col gap-4 mb-6">
         <div className="flex justify-center gap-19">
-          <button type="button" disabled={true}>
-            <ArrowBigLeft size={35} color="grey" />
+          <button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => navigate('/menu')}
+          >
+            <ArrowBigLeft size={35} className=" text-purple-600" />
           </button>
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Procurar clientes
           </h1>
           <button
-            className="cursor-pointer"
             type="button"
+            className="cursor-pointer"
             onClick={() => navigate('/cadastrar-cliente')}
           >
             <ArrowBigRight size={35} className=" text-purple-600" />

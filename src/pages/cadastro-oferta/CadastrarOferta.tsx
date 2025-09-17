@@ -120,7 +120,7 @@ export const CadastrarOferta = () => {
           <button
             type="button"
             className="cursor-pointer"
-            onClick={() => navigate('/oferta')}
+            onClick={() => navigate('/menu')}
           >
             <ArrowBigLeft size={35} className=" text-emerald-600" />
           </button>
