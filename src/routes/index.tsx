@@ -5,6 +5,8 @@ import { Login } from '../pages/login/Login.tsx'
 import { Demanda } from '../pages/demanda/Demanda.tsx'
 import { CadastrarDemanda } from '../pages/cadastro-demanda/CadastroDemanda.tsx'
 import { CadastrarOferta } from '../pages/cadastro-oferta/CadastrarOferta.tsx'
+import { Cliente } from '../pages/clientes/Cliente.tsx'
+import { CadastroCliente } from '../pages/cadastro-cliente/CadastroCliente.tsx'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -33,6 +35,15 @@ const privateRoutes: RouteObject[] = [
   },
 
   {
+    path: '/cliente',
+    element: (
+      <PrivateRoute>
+        <Cliente />,
+      </PrivateRoute>
+    ),
+  },
+
+  {
     path: '/cadastrar-demanda',
     element: (
       <PrivateRoute>
@@ -46,6 +57,15 @@ const privateRoutes: RouteObject[] = [
     element: (
       <PrivateRoute>
         <CadastrarOferta />,
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: '/cadastrar-cliente',
+    element: (
+      <PrivateRoute>
+        <CadastroCliente />,
       </PrivateRoute>
     ),
   },
