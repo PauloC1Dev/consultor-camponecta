@@ -178,7 +178,7 @@ export const CadastroCliente = () => {
               <p>Qual o tipo do cliente ?</p>
               <select
                 {...register('tipoCliente', {
-                  required: 'O é obrigatório',
+                  required: 'O tipo é obrigatório',
                 })}
                 className={`w-full max-w-[455px] bg-amber-50 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                  ${errors.tipoCliente ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-purple-500'}`}

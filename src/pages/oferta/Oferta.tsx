@@ -216,8 +216,8 @@ export const Oferta = () => {
           <input
             type="text"
             placeholder="Nome do produto"
-            value={inputNome}
             maxLength={50}
+            value={inputNome}
             onChange={(e) => setInputNome(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -299,7 +299,7 @@ export const Oferta = () => {
                 {oferta.nome || 'N/A'}
               </h3>
               <p className="text-gray-600">
-                <b>Tipo:</b> {oferta.tipo}
+                <b>Tipo:</b> {oferta.tipo || 'N/A'}
               </p>
               <p className="text-gray-600">
                 <b>Quantidade:</b> {oferta.quantidade || 'N/A'}{' '}

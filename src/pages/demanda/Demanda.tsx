@@ -298,7 +298,7 @@ export const Demanda = () => {
                 {demanda.nome || 'N/A'}
               </h3>
               <p className="text-gray-600">
-                <b>Tipo:</b> {demanda.tipo}
+                <b>Tipo:</b> {demanda.tipo || 'N/A'}
               </p>
               <p className="text-gray-600">
                 <b>Quantidade:</b> {demanda.quantidade || 'N/A'}{' '}

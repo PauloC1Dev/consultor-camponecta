@@ -1,4 +1,4 @@
-import { Apple, Sprout, User } from 'lucide-react'
+import { Apple, Power, Sprout, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export const Menu = () => {
@@ -6,6 +6,11 @@ export const Menu = () => {
 
   return (
     <div className="min-h-screen flex-col w-full flex items-center justify-center bg-gradient-to-b from-yellow-50 to-yellow-100 p-4">
+      <div className="flex w-full items-end justify-end">
+        <button className="cursor-pointer" onClick={() => navigate('/')}>
+          <Power color="red" size={40} />
+        </button>
+      </div>
       <div className="mb-10">
         <h1 className="text-5xl font-bold">Menu</h1>
       </div>

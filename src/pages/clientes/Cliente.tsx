@@ -10,13 +10,13 @@ export const Cliente = () => {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const clienteNome = searchParams.get('clienteNome')
   const clienteDoc = searchParams.get('clienteDoc')
+  const clienteNome = searchParams.get('clienteNome')
   const clienteTelefone = searchParams.get('clienteTelefone')
 
-  const [inputNome, setInputNome] = useState('')
   const [inputDoc, setInputDoc] = useState('')
   const [inputTel, setInputtel] = useState('')
+  const [inputNome, setInputNome] = useState('')
 
   const { data: usuarios } = useQuery<any[]>({
     queryKey: ['usuarios', clienteNome, clienteDoc, clienteTelefone],
@@ -78,9 +78,9 @@ export const Cliente = () => {
   }
 
   const handleClean = () => {
-    setInputNome('')
     setInputDoc('')
     setInputtel('')
+    setInputNome('')
     setSearchParams({})
   }
 
@@ -126,9 +126,11 @@ export const Cliente = () => {
           >
             <ArrowBigLeft size={35} className=" text-purple-600" />
           </button>
+
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-2 font-sans">
             Procurar clientes
           </h1>
+
           <button
             type="button"
             className="cursor-pointer"
@@ -137,12 +139,13 @@ export const Cliente = () => {
             <ArrowBigRight size={35} className=" text-purple-600" />
           </button>
         </div>
+
         <div className="flex sm:flex-row w-full justify-center">
           <input
             type="text"
             placeholder="Nome do cliente"
-            value={inputNome}
             maxLength={50}
+            value={inputNome}
             onChange={(e) => setInputNome(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -193,6 +196,7 @@ export const Cliente = () => {
           >
             Procurar
           </button>
+
           <button
             onClick={handleClean}
             className="flex-1 max-w-[225px] sm:flex-none rounded-lg bg-gray-400 text-white px-6 py-2 font-medium hover:bg-gray-500 transition"
@@ -234,7 +238,7 @@ export const Cliente = () => {
         ) : (
           <div>
             <p className="text-gray-500 text-center">
-              Nenhum usuario encontrado
+              Nenhum cliente encontrado
             </p>
             <img
               src="picole.gif"
