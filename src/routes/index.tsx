@@ -8,6 +8,7 @@ import { CadastrarOferta } from '../pages/cadastro-oferta/CadastrarOferta.tsx'
 import { Cliente } from '../pages/clientes/Cliente.tsx'
 import { CadastroCliente } from '../pages/cadastro-cliente/CadastroCliente.tsx'
 import { Menu } from '../pages/menu/Menu.tsx'
+import ChatBot from '../pages/chat-bot/ChatBot.tsx'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -76,6 +77,15 @@ const privateRoutes: RouteObject[] = [
     element: (
       <PrivateRoute>
         <CadastroCliente />,
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: '/chat-bot',
+    element: (
+      <PrivateRoute>
+        <ChatBot />,
       </PrivateRoute>
     ),
   },
