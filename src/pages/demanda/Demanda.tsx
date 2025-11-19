@@ -22,7 +22,12 @@ export const Demanda = () => {
   const { data: demandas } = useQuery<any[]>({
     queryKey: ['demandas', demandaNome, demandaEstado, demandaCidade],
     queryFn: async () => {
-      let query = supabase.from('demandas').select(`
+      const today = new Date().toISOString().split('T')[0] // 'YYYY-MM-DD'
+
+      let query = supabase
+        .from('demandas')
+        .select(
+          `
         id,
         nome,
         tipo,
@@ -36,7 +41,11 @@ export const Demanda = () => {
           nome,
           telefone
         )
-      `)
+      `
+        )
+        .lte('data_validade_inicio', today)
+        .gte('data_validade_fim', today)
+        .is('deleted_at', null)
 
       if (demandaNome) {
         query = query.ilike('nome', `%${demandaNome}%`)

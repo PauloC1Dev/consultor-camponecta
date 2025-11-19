@@ -2,7 +2,7 @@ import Swal from 'sweetalert2'
 import { supabase } from '../db/supabaseClient'
 import { useQuery } from '@tanstack/react-query'
 
-export const useUsers = (tipo: 'comprador' | 'produtor') => {
+export const useUsers = (tipo: 'comprador' | 'vendedor') => {
   const aaa = 'aaaaa'
 
   const { data: usuarioList } = useQuery<any[]>({

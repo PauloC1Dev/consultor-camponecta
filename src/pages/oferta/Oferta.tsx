@@ -22,7 +22,12 @@ export const Oferta = () => {
   const { data: ofertas } = useQuery<any[]>({
     queryKey: ['ofertas', ofertaNome, ofertaEstado, ofertaCidade],
     queryFn: async () => {
-      let query = supabase.from('ofertas').select(`
+      const today = new Date().toISOString().split('T')[0] // 'YYYY-MM-DD'
+
+      let query = supabase
+        .from('ofertas')
+        .select(
+          `
         id,
         nome,
         tipo,
@@ -36,7 +41,11 @@ export const Oferta = () => {
           nome,
           telefone
         )
-      `)
+      `
+        )
+        .lte('data_validade_inicio', today)
+        .gte('data_validade_fim', today)
+        .is('deleted_at', null)
 
       if (ofertaNome) {
         query = query.ilike('nome', `%${ofertaNome}%`)
@@ -94,7 +103,7 @@ export const Oferta = () => {
 
   const handleCopyOferta = (oferta: any) => {
     const texto = `
-   🛒  *${oferta.nome}*
+   🛒  *${oferta?.nome}*
    📦 Tipo: ${oferta.tipo}
    🔢 Quantidade: ${oferta.quantidade} ${oferta.unidade_medida}
    💰 Valor: R$ ${oferta.valor} por kg
@@ -105,7 +114,7 @@ export const Oferta = () => {
    }
    📍 Local: ${oferta.estado}/${oferta.cidade}
    ------------------------------------------------------
-   👤 Fornecedor: ${oferta.usuarios.nome}
+   👤 Fornecedor: ${oferta?.usuarios?.nome}
    📞 Telefone: ${formatarTelefone(oferta.usuarios.telefone)}`
 
     navigator.clipboard
@@ -147,13 +156,13 @@ export const Oferta = () => {
           : 'Sem data'
 
         const fornecedor = oferta.usuarios
-          ? oferta.usuarios.nome
+          ? oferta.usuarios?.nome
           : 'Não informado'
         const telefone = oferta.usuarios
           ? oferta.usuarios.telefone
           : 'Não informado'
 
-        return `${index + 1}. 🛒 *${oferta.nome}*
+        return `${index + 1}. 🛒 *${oferta?.nome}*
    📦 Tipo: ${oferta.tipo}
    🔢 Quantidade: ${oferta.quantidade} ${oferta.unidade_medida}
    💰 Valor: R$ ${oferta.valor} por kg
@@ -296,39 +305,40 @@ export const Oferta = () => {
               className="rounded-xl border border-gray-200 bg-white shadow-md p-4"
             >
               <h3 className="text-lg font-bold text-gray-800">
-                {oferta.nome || 'N/A'}
+                {oferta?.nome || 'N/A'}
               </h3>
               <p className="text-gray-600">
-                <b>Tipo:</b> {oferta.tipo || 'N/A'}
+                <b>Tipo:</b> {oferta?.tipo || 'N/A'}
               </p>
               <p className="text-gray-600">
-                <b>Quantidade:</b> {oferta.quantidade || 'N/A'}{' '}
-                {oferta.unidade_medida || 'N/A'}
+                <b>Quantidade:</b> {oferta?.quantidade || 'N/A'}{' '}
+                {oferta?.unidade_medida || 'N/A'}
               </p>
               <p className="text-gray-800 font-medium">
                 <b>Valor:</b>{' '}
                 <span className="text-emerald-600">
-                  R$ {oferta.valor || 'N/A'}
+                  R$ {oferta?.valor || 'N/A'}
                 </span>
               </p>
               <p className="text-gray-600">
                 <b>Validade até:</b>{' '}
-                {oferta.data_validade_fim
-                  ? new Date(oferta.data_validade_fim).toLocaleDateString(
+                {oferta?.data_validade_fim
+                  ? new Date(oferta?.data_validade_fim).toLocaleDateString(
                       'pt-BR'
                     )
                   : 'Sem data'}
               </p>
               <p className="text-gray-600 mb-1">
-                <b>Local:</b> {oferta.estado || 'N/A'}/{oferta.cidade || 'N/A'}
+                <b>Local:</b> {oferta?.estado || 'N/A'}/
+                {oferta?.cidade || 'N/A'}
               </p>
               <Divider className="my-2 text-gray-300" />
               <p className="text-gray-600 mt-1">
-                <b>Fornecedor:</b> {oferta.usuarios.nome || 'N/A'}
+                <b>Fornecedor:</b> {oferta?.usuarios?.nome || 'N/A'}
               </p>
               <p className="text-gray-600">
                 <b>Telefone:</b>{' '}
-                {formatarTelefone(oferta.usuarios.telefone) || 'N/A'}
+                {formatarTelefone(oferta?.usuarios?.telefone) || 'N/A'}
               </p>
 
               <button

@@ -24,7 +24,7 @@ export const CadastrarOferta = () => {
   const estadoSelecionado = watch('estadoOferta')
 
   const { estadosList, getEstadoById } = useEstados()
-  const { usuarioList, getUsuarioeById } = useUsers('produtor')
+  const { usuarioList, getUsuarioeById } = useUsers('vendedor')
   const { cidadeList, getCidadeById } = useCidades(estadoSelecionado)
 
   const onSubmit = async (ofertaData: any) => {
