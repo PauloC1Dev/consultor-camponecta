@@ -13,15 +13,12 @@ export const CadastrarOferta = () => {
 
   const {
     reset,
-    watch,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<any>({
     mode: 'onChange',
   })
-
-  const estadoSelecionado = watch('estadoOferta')
 
   const { estadosList, getEstadoById } = useEstados()
   const { usuarioList, getUsuarioeById } = useUsers('vendedor')
