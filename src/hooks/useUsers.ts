@@ -3,8 +3,6 @@ import { supabase } from '../db/supabaseClient'
 import { useQuery } from '@tanstack/react-query'
 
 export const useUsers = (tipo: 'comprador' | 'vendedor') => {
-  const aaa = 'aaaaa'
-
   const { data: usuarioList } = useQuery<any[]>({
     queryKey: ['usuarios'],
     queryFn: async () => {
@@ -15,7 +13,7 @@ export const useUsers = (tipo: 'comprador' | 'vendedor') => {
         telefone
       `)
 
-      query = query.eq('tipo', tipo)
+      query = query.in('tipo', [tipo, 'compradorEvendedor'])
 
       const { data, error } = await query
 
@@ -39,5 +37,5 @@ export const useUsers = (tipo: 'comprador' | 'vendedor') => {
     return usuarioList?.find((usuario) => usuario.id === id) || null
   }
 
-  return { aaa, usuarioList, getUsuarioeById }
+  return { usuarioList, getUsuarioeById }
 }

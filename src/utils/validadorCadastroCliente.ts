@@ -114,7 +114,7 @@ export const validadorCadastroCliente = (clienteData: any) => {
     return { isValid: false, error: 'Tipo de cliente obrigatório' }
   }
 
-  const tiposValidos = ['comprador', 'vendedor', 'ambos']
+  const tiposValidos = ['comprador', 'vendedor', 'compradorEvendedor']
   if (!tiposValidos.includes(clienteData.tipoCliente)) {
     Swal.fire({
       timer: 3000,
@@ -136,7 +136,7 @@ export const validadorCadastroCliente = (clienteData: any) => {
     return { isValid: false, error: 'Tipo de licença obrigatório' }
   }
 
-  const licencasValidas = ['gratuito', 'recorrente', 'cancelado']
+  const licencasValidas = ['trial', 'ativo']
   if (!licencasValidas.includes(clienteData.licencaCliente)) {
     Swal.fire({
       timer: 3000,

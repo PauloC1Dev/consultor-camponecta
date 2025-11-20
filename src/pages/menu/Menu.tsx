@@ -1,14 +1,8 @@
 import { Apple, Power, Sprout, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useGemini } from '../../hooks/useGemini'
 
 export const Menu = () => {
   const navigate = useNavigate()
-
-  const { respostaIA } = useGemini()
-
-  console.log('respostaIA')
-  console.log(respostaIA)
 
   return (
     <div className="min-h-screen flex-col w-full flex items-center justify-center bg-gradient-to-b from-yellow-50 to-yellow-100 p-4">

@@ -27,7 +27,7 @@ export const Cliente = () => {
         telefone,
         cpf_cnpj,
         tipo,
-        tipo_licenca
+        assinatura_status
       `)
 
       if (clienteNome) {
@@ -90,7 +90,7 @@ export const Cliente = () => {
    📞 Telefone: ${formatarTelefone(usuario.telefone)}
    📦 Tipo: ${usuario.tipo}
    📋 cpf/cnpj: ${usuario.cpf_cnpj}
-   ⚖️ Licença: ${usuario.tipo_licenca}
+   ⚖️ Licença: ${usuario.assinatura_status}
    ------------------------------------------------------
    `
     navigator.clipboard

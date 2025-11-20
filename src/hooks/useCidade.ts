@@ -1,45 +1,21 @@
-import Swal from 'sweetalert2'
-import { supabase } from '../db/supabaseClient'
-import { useQuery } from '@tanstack/react-query'
+const cidadesCeara = [
+  { id: 1, nome: 'Fortaleza' },
+  { id: 2, nome: 'Caucaia' },
+  { id: 3, nome: 'Juazeiro do Norte' },
+  { id: 4, nome: 'Sobral' },
+  { id: 5, nome: 'Maracanaú' },
+  { id: 6, nome: 'Crato' },
+  { id: 7, nome: 'Itapipoca' },
+  { id: 8, nome: 'Maranguape' },
+  { id: 9, nome: 'Iguatu' },
+  { id: 10, nome: 'Quixadá' },
+  { id: 11, nome: 'São Benedito' },
+]
 
-export const useCidades = (estadoId?: string | number) => {
-  const aaa = 'aaaaa'
-
-  const { data: cidadeList } = useQuery<any[]>({
-    queryKey: ['cidades', estadoId],
-    queryFn: async () => {
-      let query = supabase.from('cidades').select(`
-        id,
-        estado_id,
-        nome
-      `)
-
-      if (estadoId) {
-        query = query.eq('estado_id', estadoId)
-      }
-
-      const { data, error } = await query
-
-      if (error) {
-        Swal.fire({
-          timer: 4000,
-          icon: 'error',
-          showCancelButton: false,
-          title: 'Falha na conexão com o banco!',
-          text: 'Entre em contato com o administrador ou tente novamente.',
-        })
-
-        throw new Error(error.message)
-      }
-
-      return data || []
-    },
-    enabled: !!estadoId,
-  })
-
+export const useCidades = () => {
   const getCidadeById = (id: any) => {
-    return cidadeList?.find((cidade) => cidade.id === id) || null
+    return cidadesCeara?.find((cidade) => cidade.id === id) || null
   }
 
-  return { aaa, cidadeList, getCidadeById }
+  return { cidadesCeara, getCidadeById }
 }

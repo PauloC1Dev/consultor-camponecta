@@ -25,7 +25,7 @@ export const CadastrarOferta = () => {
 
   const { estadosList, getEstadoById } = useEstados()
   const { usuarioList, getUsuarioeById } = useUsers('vendedor')
-  const { cidadeList, getCidadeById } = useCidades(estadoSelecionado)
+  const { cidadesCeara, getCidadeById } = useCidades()
 
   const onSubmit = async (ofertaData: any) => {
     try {
@@ -55,8 +55,6 @@ export const CadastrarOferta = () => {
             valor: parseFloat(ofertaData.valorOferta),
             data_validade_inicio: new Date().toISOString().split('T')[0],
             data_validade_fim: ofertaData.dataFim,
-            estado_id: parseInt(ofertaData.estadoOferta),
-            cidade_id: parseInt(ofertaData.cidadeOferta),
             unidade_medida: 'kg',
             logistica_propria:
               ofertaData.logisticaOferta === 'Sim' ? true : false,
@@ -299,7 +297,7 @@ export const CadastrarOferta = () => {
                  ${errors.cidadeOferta ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'}`}
               >
                 <option value="">Selecione uma cidade</option>
-                {(cidadeList || []).map((cidade) => (
+                {(cidadesCeara || []).map((cidade) => (
                   <option key={cidade.id} value={cidade.id}>
                     {cidade.nome}
                   </option>

@@ -22,7 +22,7 @@ export const Demanda = () => {
   const { data: demandas } = useQuery<any[]>({
     queryKey: ['demandas', demandaNome, demandaEstado, demandaCidade],
     queryFn: async () => {
-      const today = new Date().toISOString().split('T')[0] // 'YYYY-MM-DD'
+      const today = new Date().toISOString().split('T')[0]
 
       let query = supabase
         .from('demandas')

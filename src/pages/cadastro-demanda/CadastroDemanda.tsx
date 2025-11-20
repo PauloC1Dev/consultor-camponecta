@@ -13,7 +13,6 @@ export const CadastrarDemanda = () => {
 
   const {
     reset,
-    watch,
     register,
     handleSubmit,
     formState: { errors },
@@ -21,11 +20,9 @@ export const CadastrarDemanda = () => {
     mode: 'onChange',
   })
 
-  const estadoSelecionado = watch('estadoDemanda')
-
   const { estadosList, getEstadoById } = useEstados()
+  const { cidadesCeara, getCidadeById } = useCidades()
   const { usuarioList, getUsuarioeById } = useUsers('comprador')
-  const { cidadeList, getCidadeById } = useCidades(estadoSelecionado)
 
   const onSubmit = async (demandaData: any) => {
     try {
@@ -55,8 +52,6 @@ export const CadastrarDemanda = () => {
             valor: parseFloat(demandaData.valorDemanda),
             data_validade_inicio: new Date().toISOString().split('T')[0],
             data_validade_fim: demandaData.dataFim,
-            estado_id: parseInt(demandaData.estadoDemanda),
-            cidade_id: parseInt(demandaData.cidadeDemanda),
             unidade_medida: 'kg',
             logistica_propria:
               demandaData.logisticaDemanda === 'Sim' ? true : false,
@@ -276,7 +271,7 @@ export const CadastrarDemanda = () => {
                  ${errors.estadoDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               >
                 <option value="">Selecione um estado</option>
-                {(estadosList || []).map((estado) => (
+                {(estadosList ?? []).map((estado) => (
                   <option key={estado.id} value={estado.id}>
                     {estado.nome}
                   </option>
@@ -299,7 +294,7 @@ export const CadastrarDemanda = () => {
                  ${errors.cidadeDemanda ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-700'}`}
               >
                 <option value="">Selecione uma cidade</option>
-                {(cidadeList || []).map((cidade) => (
+                {cidadesCeara.map((cidade) => (
                   <option key={cidade.id} value={cidade.id}>
                     {cidade.nome}
                   </option>

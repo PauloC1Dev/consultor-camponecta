@@ -32,7 +32,6 @@ export const CadastroCliente = () => {
             telefone: clienteData.telefoneCliente || 'N/A',
             cpf_cnpj: clienteData.documentoCliente || 'N/A',
             tipo: clienteData.tipoCliente,
-            tipo_licenca: clienteData.licencaCliente,
             deleted_at: null,
           },
         ])
@@ -185,7 +184,8 @@ export const CadastroCliente = () => {
               >
                 <option value="">Selecione um tipo</option>
                 <option value="comprador">Comprador</option>
-                <option value="produtor">Produtor</option>
+                <option value="vendedor">Produtor</option>
+                <option value="compradorEvendedor">Comprador e vendedor</option>
               </select>
               {errors.tipoCliente && (
                 <p className="text-red-500 text-sm mt-1">
@@ -204,9 +204,8 @@ export const CadastroCliente = () => {
                  ${errors.licencaCliente ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-purple-500'}`}
               >
                 <option value="">Selecione uma licença</option>
-                <option value="gratuito">Gratuito</option>
-                <option value="recorrente">Recorrente</option>
-                <option value="cancelado">Cancelado</option>
+                <option value="ativo">ativo</option>
+                <option value="trial">trial</option>
               </select>
               {errors.licencaCliente && (
                 <p className="text-red-500 text-sm mt-1">
